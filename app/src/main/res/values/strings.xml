@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">tfgProject</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_equipos">Equipos</string>
+    <string name="title_noticias">Noticias</string>
+    <string name="title_partidos">Partidos</string>
+
+</resources>

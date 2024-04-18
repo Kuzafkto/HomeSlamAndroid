@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/navigation_noticias"
+            android:title="@string/title_noticias" />
+        <item
+            android:id="@+id/navigation_partidos"
+            android:title="@string/title_partidos" />
+        <item
+            android:id="@+id/navigation_equipos"
+            android:title="@string/title_equipos" />
+</menu>

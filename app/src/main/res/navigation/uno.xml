@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/uno"
+    app:startDestination="@id/UnoFragment">
+
+    <fragment
+        android:id="@+id/UnoFragment"
+        android:label="UnoFragment"
+        android:name="com.example.tfgproject.unoFragment"/>
+</navigation>
