@@ -1,11 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
         <item
             android:id="@+id/navigation_noticias"
-            android:title="@string/title_noticias" />
+            android:title="@string/title_noticias"
+            android:icon="@drawable/news_icon"/>
         <item
             android:id="@+id/navigation_partidos"
-            android:title="@string/title_partidos" />
+            android:title="@string/title_partidos"
+            android:icon="@drawable/games_icon"
+            />
         <item
             android:id="@+id/navigation_equipos"
-            android:title="@string/title_equipos" />
+            android:title="@string/title_equipos"
+            android:icon="@drawable/teams_icon"/>
 </menu>

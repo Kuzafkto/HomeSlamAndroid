@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "953186845113",
+    "project_id": "home-slam",
+    "storage_bucket": "home-slam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953186845113:android:29bf2a97aab378f20e3668",
+        "android_client_info": {
+          "package_name": "com.example.tfgproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlJkp-GlsLrtUde-MopqqLf82OgZxepeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,5 +4,16 @@
     <string name="title_equipos">Equipos</string>
     <string name="title_noticias">Noticias</string>
     <string name="title_partidos">Partidos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="equipos">Equipos</string>
+    <string name="partidos">Partidos</string>
+    <string name="noticias">Noticias</string>
+    <string name="hamburger_menu_description">Menu desplegable</string>
+    <string name="profile_description">Mi perfil</string>
+    <string name="my_title">Mi perfil</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
 
 </resources>

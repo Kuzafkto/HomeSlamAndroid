@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_profile"
+    app:startDestination="@id/ProfileFragment">
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.example.tfgproject.ui.profile.ProfileFragment"
+        android:label="Perfil" >
+    </fragment>
+
+</navigation>

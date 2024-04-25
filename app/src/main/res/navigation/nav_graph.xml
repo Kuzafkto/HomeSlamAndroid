@@ -2,7 +2,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/uno">
-    <include app:graph="@navigation/uno" />
-    <include app:graph="@navigation/dos" />
+    app:startDestination="@id/navigation_noticias">
+
+    <include app:graph="@navigation/noticias" />
+    <include app:graph="@navigation/partidos" />
+    <include app:graph="@navigation/equipos" />
+    <include app:graph="@navigation/profile" />
+    <include app:graph="@navigation/login" />
+    <action
+        android:id="@+id/action_global_navigation_login"
+        app:destination="@id/navigation_login" />
 </navigation>
