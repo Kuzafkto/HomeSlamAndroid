@@ -8,6 +8,7 @@
     <include app:graph="@navigation/partidos" />
     <include app:graph="@navigation/equipos" />
     <include app:graph="@navigation/profile" />
+    <include app:graph="@navigation/register" />
     <include app:graph="@navigation/login" />
     <action
         android:id="@+id/action_global_navigation_login"

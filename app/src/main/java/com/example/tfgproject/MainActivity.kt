@@ -1,6 +1,7 @@
 package com.example.tfgproject
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -39,6 +40,15 @@ class MainActivity : AppCompatActivity() {
         //setSupportActionBar(binding.toolbar)
        // val toolbar=binding.toolbar
        // setSupportActionBar(toolbar)
+        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+
+        loginViewModel.isAuthenticated.observe(this) { isAuthenticated ->
+            if (!isAuthenticated) {
+                navigateToLogin()
+            }
+        }
+
+
 
         toolbarViewModel = ViewModelProvider(this).get(ToolbarViewModel::class.java)
         setSupportActionBar(binding.toolbar)
@@ -75,8 +85,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_partidos, // ID para Partidos
                 R.id.navigation_equipos,   // ID para Equipos
                 R.id.navigation_login,
-                R.id.action_global_navigation_login// ID para Equipos
-
+                R.id.action_global_navigation_login, // ID para Equipos
             )
         )
 
@@ -119,6 +128,15 @@ class MainActivity : AppCompatActivity() {
             // y no está en LoginFragment (como el código del comentario anterior).
         }
     }
+
+    private fun navigateToLogin() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        // Opcional: Limpia la pila de actividades para que el usuario no pueda volver a la MainActivity sin autenticarse.
+        loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(loginIntent)
+        finish() // Finaliza MainActivity
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
