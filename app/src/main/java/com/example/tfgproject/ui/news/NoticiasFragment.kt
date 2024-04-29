@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.tfgproject.databinding.FragmentNoticiasBinding
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 class NoticiasFragment : Fragment() {
@@ -18,11 +19,12 @@ class NoticiasFragment : Fragment() {
     private lateinit var toolbarViewModel: ToolbarViewModel
     private var _binding: FragmentNoticiasBinding? = null
     private val binding get() = _binding!!
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Obtener el ViewModel de la actividad para asegurar que se utiliza la misma instancia
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
+        auth = FirebaseAuth.getInstance() // Asegúrate de que FirebaseAuth esté inicializado
     }
 
     override fun onCreateView(
@@ -35,11 +37,11 @@ class NoticiasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Establecer el título para la Toolbar cuando la vista del fragmento está lista
         toolbarViewModel.setTitle("Noticias")
 
-        // Aquí podrías agregar más lógica de inicialización o configuración de la vista
+        // Establece el email del usuario autenticado en el TextView
+        val userUID = auth.currentUser?.uid
+        binding.userEmailTextView.text = userUID ?: "Usuario no autenticado"
     }
 
     override fun onDestroyView() {
@@ -47,3 +49,4 @@ class NoticiasFragment : Fragment() {
         _binding = null
     }
 }
+
