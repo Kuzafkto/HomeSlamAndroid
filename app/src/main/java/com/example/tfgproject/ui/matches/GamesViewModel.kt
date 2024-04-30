@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.tfgproject.model.Game
 import com.example.tfgproject.model.Team
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class GamesViewModel : ViewModel() {
 
@@ -17,6 +18,7 @@ class GamesViewModel : ViewModel() {
     private val teamNames = mutableMapOf<String, String>()
     private val _namesLoaded = MutableLiveData<Boolean>(false)
     val namesLoaded: LiveData<Boolean> = _namesLoaded
+    private var teamListenerRegistration: ListenerRegistration? = null
 
     init {
         loadTeamNames()
@@ -24,18 +26,29 @@ class GamesViewModel : ViewModel() {
     }
 
     private fun loadTeamNames() {
-        db.collection("teams").get().addOnSuccessListener { result ->
-            for (document in result.documents) {
-                val team = document.toObject(Team::class.java)
-                team?.name?.let { name ->
-                    teamNames[document.id] = name
+        teamListenerRegistration = db.collection("teams")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w("GamesViewModel", "Listen for team names failed.", e)
+                    _namesLoaded.value = false
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && !snapshot.isEmpty) {
+                    for (document in snapshot.documents) {
+                        val team = document.toObject(Team::class.java)
+                        team?.name?.let { name ->
+                            teamNames[document.id] = name
+                        }
+                    }
+                    _namesLoaded.value = true
+                } else {
+                    Log.d("GamesViewModel", "Current data: null")
+                    _namesLoaded.value = false
                 }
             }
-            _namesLoaded.value = true  // Indicar que la carga de nombres ha finalizado
-        }.addOnFailureListener {
-            _namesLoaded.value = false  // Indicar fallo en la carga
-        }
     }
+
 
     fun getTeamName(teamId: String): String = teamNames[teamId] ?: "Unknown Team ID"
 
@@ -48,6 +61,11 @@ class GamesViewModel : ViewModel() {
             val gameList = snapshot?.toObjects(Game::class.java)
             _games.value = gameList ?: emptyList()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        teamListenerRegistration?.remove()  // Remover listener cuando el ViewModel se destruya
     }
 }
 
