@@ -83,17 +83,17 @@ class LoginViewModel : ViewModel() {
                     if (result.user != null) {
                         Log.d(TAG, "signInWithEmail:success")
                         // Manejar éxito de autenticación, por ejemplo actualizar UI o navegar
-                        fragment.onLoginSuccess()
+                        //fragment.onLoginSuccess()
                     } else {
                         Log.d(TAG, "signInWithEmail:failure")
-                       fragment.onLoginFailed("Authentication failed.")
+                       //fragment.onLoginFailed("Authentication failed.")
                     }
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "signInWithEmail:failure", e)
                 withContext(Dispatchers.Main) {
                     // Mostrar error usando un método en el fragmento que maneje el contexto adecuadamente
-                    fragment.onLoginFailed("Authentication failed: ${e.localizedMessage}")
+                    //fragment.onLoginFailed("Authentication failed: ${e.localizedMessage}")
                 }
             }
         }

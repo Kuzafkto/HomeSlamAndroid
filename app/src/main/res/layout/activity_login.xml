@@ -8,67 +8,12 @@
     android:background="@color/black"
     tools:context=".LoginActivity">
 
-    <!-- Email EditText -->
-    <EditText
-        android:id="@+id/emailEditText"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/passwordEditText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="120dp"
-        android:background="@android:color/transparent" />
-
-    <!-- Password EditText -->
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/emailEditText"
-        app:layout_constraintEnd_toEndOf="@id/emailEditText"
-        app:layout_constraintTop_toBottomOf="@id/emailEditText"
-        app:layout_constraintBottom_toTopOf="@id/loginButton"
-        android:layout_marginTop="40dp"
-        android:background="@android:color/transparent" />
-
-    <!-- Login Button -->
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toStartOf="@id/passwordEditText"
-        app:layout_constraintEnd_toEndOf="@id/passwordEditText"
-        app:layout_constraintTop_toBottomOf="@id/passwordEditText"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="16dp"
-        />
-
-    <!-- Register Button -->
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/register"
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toStartOf="@id/loginButton"
-        app:layout_constraintEnd_toEndOf="@id/loginButton"
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
-        android:layout_marginTop="16dp" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

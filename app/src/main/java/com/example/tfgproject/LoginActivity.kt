@@ -11,6 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tfgproject.databinding.ActivityLoginBinding
 import com.example.tfgproject.databinding.ActivityMainBinding
+import com.example.tfgproject.ui.login.LoginFragment
+import com.example.tfgproject.ui.register.RegisterFragment
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -18,40 +20,62 @@ import com.google.firebase.auth.auth
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Inicializa el binding antes de llamar a setContentView
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Inicialización de Firebase Auth
+        setContentView(R.layout.activity_login)
         auth = Firebase.auth
 
-        binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-            signInWithEmailAndPassword(email, password)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, LoginFragment())
+                .commit()
         }
     }
 
-    private fun signInWithEmailAndPassword(email: String, password: String) {
+    fun switchToRegister() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, RegisterFragment())
+            .addToBackStack(null)  // Optional
+            .commit()
+    }
+
+    fun switchToLogin() {
+        supportFragmentManager.popBackStack()
+    }
+
+    fun signInWithEmailAndPassword(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    Log.d("LOGINNN", "FUNCIONAAAA")
-
-                    // Iniciar MainActivity
+                    Log.d("LoginActivity", "signInWithEmail:success")
                     startActivity(Intent(this, MainActivity::class.java))
-                    finish() // Finalizar LoginActivity
+                    finish()  // Finalizar LoginActivity
                 } else {
                     // If sign in fails, display a message to the user.
+                    Log.w("LoginActivity", "signInWithEmail:failure", task.exception)
                     Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
+
+    fun createUserWithEmailAndPassword(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign up success, update UI with the user's information
+                    Log.d("LoginActivity", "createUserWithEmail:success")
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()  // Finalizar LoginActivity
+                } else {
+                    // If sign up fails, display a message to the user.
+                    Log.w("LoginActivity", "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(baseContext, "Registration failed.", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
 }
+
