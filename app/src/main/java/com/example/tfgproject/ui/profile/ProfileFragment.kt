@@ -18,7 +18,6 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Obtener el ViewModel de la actividad para asegurar que se utiliza la misma instancia
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
     }
 
@@ -33,14 +32,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Establecer el título para la Toolbar cuando la vista del fragmento está lista
         toolbarViewModel.setTitle("Perfil")
 
-        // Aquí puedes añadir más lógica para inicializar la vista o configurar observadores, etc.
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Limpiar la referencia al binding para evitar fugas de memoria
+        _binding = null
     }
 }

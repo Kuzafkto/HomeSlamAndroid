@@ -1,0 +1,11 @@
+<fragment android:id="@+id/teamDetailFragment"
+    android:name="com.example.tfgproject.ui.teamDetail.TeamDetailFragment"
+    android:label="team_detail"
+    tools:layout="@layout/fragment_team_detail"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <argument
+        android:name="teamId"
+        app:argType="string" />
+</fragment>

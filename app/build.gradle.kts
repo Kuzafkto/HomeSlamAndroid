@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
-
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,5 +65,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation ("com.google.gms:google-services:4.3.10")
     implementation("com.google.firebase:firebase-database")
+    implementation("io.coil-kt:coil:2.6.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation ("com.google.android.material:material:1.6.7")
 
 }

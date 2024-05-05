@@ -24,7 +24,7 @@ class NoticiasFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
-        auth = FirebaseAuth.getInstance() // Asegúrate de que FirebaseAuth esté inicializado
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -39,11 +39,13 @@ class NoticiasFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbarViewModel.setTitle("Noticias")
 
-        // Establece el email del usuario autenticado en el TextView
         val userUID = auth.currentUser?.uid
         binding.userEmailTextView.text = userUID ?: "Usuario no autenticado"
     }
-
+    override fun onResume() {
+        super.onResume()
+        toolbarViewModel.setTitle("Noticias")
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

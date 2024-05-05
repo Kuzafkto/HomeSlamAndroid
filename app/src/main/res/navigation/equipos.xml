@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_equipos"
-    app:startDestination="@id/EquiposFragment">
+    app:startDestination="@id/equiposFragment">
 
-    <fragment
-        android:id="@+id/EquiposFragment"
-        android:label="fragment_equipos"
-        android:name="com.example.tfgproject.ui.teams.EquiposFragment"/>
+    <fragment android:id="@+id/equiposFragment"
+        android:name="com.example.tfgproject.ui.teams.EquiposFragment"
+        android:label="Equipos"
+        tools:layout="@layout/fragment_equipos"> <!-- Asegúrate de que el layout está correcto -->
+        <action
+            android:id="@+id/action_equiposFragment_to_teamDetailFragment"
+            app:destination="@id/teamDetailFragment">
+        </action>
+    </fragment>
+    <fragment android:id="@+id/teamDetailFragment"
+        android:name="com.example.tfgproject.ui.teamDetail.TeamDetailFragment"
+        android:label="team_detail"
+        tools:layout="@layout/fragment_team_detail">
+        <argument
+            android:name="teamId"
+            app:argType="string" />
+    </fragment>
 </navigation>

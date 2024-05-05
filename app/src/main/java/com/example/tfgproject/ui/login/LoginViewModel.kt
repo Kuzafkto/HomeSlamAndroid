@@ -20,7 +20,6 @@ import java.util.concurrent.Executors
 
 class LoginViewModel : ViewModel() {
     private lateinit var auth: FirebaseAuth
-    // LiveData para observar el estado de autenticación
     private val _isAuthenticated = MutableLiveData<Boolean>()
     val registrationState: LiveData<Boolean> get() = _registrationState
     private val _registrationState = MutableLiveData<Boolean>()

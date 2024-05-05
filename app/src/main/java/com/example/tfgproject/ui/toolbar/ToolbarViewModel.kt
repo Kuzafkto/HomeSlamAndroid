@@ -1,16 +1,13 @@
 package com.example.tfgproject.ui.toolbar
-
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ToolbarViewModel : ViewModel() {
-    private val _title = MutableLiveData<String>()
-    val title: LiveData<String> = _title
+    private val _title = MutableStateFlow("Titulo Inicial")
+    val title: StateFlow<String> = _title
 
     fun setTitle(title: String) {
         _title.value = title
     }
-
-    // Aquí puedes añadir más lógica relacionada con la Toolbar si es necesario.
 }

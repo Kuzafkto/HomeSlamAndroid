@@ -1,16 +1,16 @@
 package com.example.tfgproject.ui.teams
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tfgproject.model.Team
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class TeamsViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-    private val _teams = MutableLiveData<List<Team>>()
-    val teams: LiveData<List<Team>> = _teams
+    private val _teams = MutableStateFlow<List<Team>>(emptyList())
+    val teams: StateFlow<List<Team>> = _teams
 
     init {
         loadTeams()
@@ -25,12 +25,14 @@ class TeamsViewModel : ViewModel() {
 
             val teamList = mutableListOf<Team>()
             for (doc in snapshot!!) {
-                doc.toObject(Team::class.java)?.let {
+                doc.toObject(Team::class.java).let {
+                    it.id = doc.id  //id del documento al objeto team
                     teamList.add(it)
                 }
             }
             _teams.value = teamList
         }
     }
+
 }
 

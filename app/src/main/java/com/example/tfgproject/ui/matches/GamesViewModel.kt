@@ -8,17 +8,20 @@ import com.example.tfgproject.model.Game
 import com.example.tfgproject.model.Team
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class GamesViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
-    private val _games = MutableLiveData<List<Game>>()
-    val games: LiveData<List<Game>> = _games
 
-    private val teamNames = mutableMapOf<String, String>()
-    private val _namesLoaded = MutableLiveData<Boolean>(false)
-    val namesLoaded: LiveData<Boolean> = _namesLoaded
-    private var teamListenerRegistration: ListenerRegistration? = null
+    private val _games = MutableStateFlow<List<Game>>(emptyList())
+    val games: StateFlow<List<Game>> = _games.asStateFlow()
+
+    private val teamNames = mutableMapOf<String, Team>()
+    private val _namesLoaded = MutableStateFlow(false)
+    val namesLoaded: StateFlow<Boolean> = _namesLoaded.asStateFlow()
 
     init {
         loadTeamNames()
@@ -26,7 +29,7 @@ class GamesViewModel : ViewModel() {
     }
 
     private fun loadTeamNames() {
-        teamListenerRegistration = db.collection("teams")
+        db.collection("teams")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w("GamesViewModel", "Listen for team names failed.", e)
@@ -35,11 +38,10 @@ class GamesViewModel : ViewModel() {
                 }
 
                 if (snapshot != null && !snapshot.isEmpty) {
+                    teamNames.clear()
                     for (document in snapshot.documents) {
                         val team = document.toObject(Team::class.java)
-                        team?.name?.let { name ->
-                            teamNames[document.id] = name
-                        }
+                        team?.let { teamNames[document.id] = it }
                     }
                     _namesLoaded.value = true
                 } else {
@@ -49,8 +51,9 @@ class GamesViewModel : ViewModel() {
             }
     }
 
+    fun getTeamName(teamId: String): String = teamNames[teamId]?.name ?: "Unknown Team ID"
 
-    fun getTeamName(teamId: String): String = teamNames[teamId] ?: "Unknown Team ID"
+    fun getTeamImageUrl(teamId: String): String? = teamNames[teamId]?.imageUrl
 
     private fun loadGames() {
         db.collection("games").addSnapshotListener { snapshot, e ->
@@ -58,14 +61,7 @@ class GamesViewModel : ViewModel() {
                 Log.w("GamesViewModel", "Listen failed.", e)
                 return@addSnapshotListener
             }
-            val gameList = snapshot?.toObjects(Game::class.java)
-            _games.value = gameList ?: emptyList()
+            _games.value = snapshot?.toObjects(Game::class.java) ?: emptyList()
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        teamListenerRegistration?.remove()  // Remover listener cuando el ViewModel se destruya
-    }
 }
-

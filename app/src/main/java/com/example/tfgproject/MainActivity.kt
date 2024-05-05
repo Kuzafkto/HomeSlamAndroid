@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -25,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
@@ -64,9 +66,10 @@ class MainActivity : AppCompatActivity() {
         /*toolbarViewModel.title.observe(this) { title ->
             supportActionBar?.title = title
         }*/
-        toolbarViewModel.title.observe(this) { title ->
-            // Encuentra el TextView en tu Toolbar y actualiza el texto
-            findViewById<TextView>(R.id.toolbar_title).text = title
+        lifecycleScope.launch {
+            toolbarViewModel.title.collect { title ->
+                findViewById<TextView>(R.id.toolbar_title).text = title
+            }
         }
 
         val hamburgerButton=binding.buttonHamburger
@@ -141,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         // Opcional: Limpia la pila de actividades para que el usuario no pueda volver a la MainActivity sin autenticarse.
         loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(loginIntent)
-        finish() // Finaliza MainActivity
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

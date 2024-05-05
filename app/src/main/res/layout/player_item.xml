@@ -1,0 +1,75 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="7dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:strokeWidth="2dp"
+    app:strokeColor="#d3d3d3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="250dp"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/imageViewPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/backgrounds/scenic"/>
+
+        <TextView
+            android:id="@+id/textViewPlayerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/white"
+            tools:text="Player 01" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="horizontal"
+            android:gravity="center|bottom"
+            android:layout_marginTop="4dp"
+            android:padding="4dp">  <!-- Añadido padding para asegurar espacio alrededor -->
+
+            <ImageView
+                android:id="@+id/imageViewIcon1"
+                android:layout_width="50dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/imageViewIcon2"
+                android:layout_width="50dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/imageViewIcon3"
+                android:layout_width="50dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

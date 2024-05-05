@@ -4,6 +4,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.example.tfgproject.R
 import com.example.tfgproject.databinding.GameListItemBinding
 import com.example.tfgproject.model.Game
 
@@ -11,9 +14,34 @@ class GameAdapter(private var games: List<Game>, private val viewModel: GamesVie
 
     inner class GameViewHolder(private val binding: GameListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(game: Game) {
-            binding.textViewGameDate.text = game.gameDate
-            binding.textViewLocal.text = viewModel.getTeamName(game.local ?: "")
-            binding.textViewVisitor.text = viewModel.getTeamName(game.visitor ?: "")
+            binding.textViewLocalTeam.text = viewModel.getTeamName(game.local ?: "")
+            binding.textViewVisitorTeam.text = viewModel.getTeamName(game.visitor ?: "")
+            binding.textViewLocalScore.text = game.localRuns.toString()
+            binding.textViewVisitorScore.text = game.visitorRuns.toString()
+
+            game.local?.let {
+                viewModel.getTeamImageUrl(it)?.let { imageUrl ->
+                    binding.imageViewLocal.load(imageUrl) {
+                        crossfade(true)
+                        placeholder(R.drawable.placeholder_image)  // imagen de placeholder
+                        error(R.drawable.error_image)  // imagen de error
+                        transformations(CircleCropTransformation())
+                    }
+                    Unit
+                }
+            }
+
+            game.visitor?.let {
+                viewModel.getTeamImageUrl(it)?.let { imageUrl ->
+                    binding.imageViewVisitor.load(imageUrl) {
+                        crossfade(true)
+                        placeholder(R.drawable.placeholder_image)  // imagen de placeholder
+                        error(R.drawable.error_image)  // imagen de error
+                        transformations(CircleCropTransformation())
+                    }
+                    Unit
+                }
+            }
         }
     }
 
