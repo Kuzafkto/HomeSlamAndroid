@@ -1,14 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.matchDetail.MatchDetailFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-</FrameLayout>
+        <!-- LinearLayout principal horizontal que contiene imágenes y texto 'VS' -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Layout del equipo local -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/imgTeamLocal"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="4dp"
+                    app:srcCompat="@drawable/profile_icon"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/tvLocalTeamName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Equipo 01" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxLocal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:scaleX="1.5"
+                    android:scaleY="1.5" />
+            </LinearLayout>
+
+            <!-- Texto 'VS' centrado -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VS"
+                android:textSize="24sp"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="center_vertical" />
+
+            <!-- Layout del equipo visitante -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/imgTeamVisitor"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="4dp"
+                    app:srcCompat="@drawable/profile_icon"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/tvVisitorTeamName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Equipo 02" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxVisitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:scaleX="1.5"
+                    android:scaleY="1.5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Sección de la historia -->
+        <TextView
+            android:id="@+id/tvStoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Story"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvStory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Equip 1 started playing at the bronx neighborhood at 1956 when..."
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnReadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read More"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+</ScrollView>

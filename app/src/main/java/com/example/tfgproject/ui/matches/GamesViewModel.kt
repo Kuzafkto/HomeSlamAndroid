@@ -12,48 +12,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class GamesViewModel : ViewModel() {
 
+class GamesViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
     private val _games = MutableStateFlow<List<Game>>(emptyList())
     val games: StateFlow<List<Game>> = _games.asStateFlow()
 
-    private val teamNames = mutableMapOf<String, Team>()
-    private val _namesLoaded = MutableStateFlow(false)
-    val namesLoaded: StateFlow<Boolean> = _namesLoaded.asStateFlow()
+    private val _teamDetails = MutableStateFlow<Map<String, TeamDetails>>(mapOf())
+    val teamDetails: StateFlow<Map<String, TeamDetails>> = _teamDetails
 
     init {
-        loadTeamNames()
         loadGames()
     }
-
-    private fun loadTeamNames() {
-        db.collection("teams")
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w("GamesViewModel", "Listen for team names failed.", e)
-                    _namesLoaded.value = false
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null && !snapshot.isEmpty) {
-                    teamNames.clear()
-                    for (document in snapshot.documents) {
-                        val team = document.toObject(Team::class.java)
-                        team?.let { teamNames[document.id] = it }
-                    }
-                    _namesLoaded.value = true
-                } else {
-                    Log.d("GamesViewModel", "Current data: null")
-                    _namesLoaded.value = false
-                }
-            }
-    }
-
-    fun getTeamName(teamId: String): String = teamNames[teamId]?.name ?: "Unknown Team ID"
-
-    fun getTeamImageUrl(teamId: String): String? = teamNames[teamId]?.imageUrl
 
     private fun loadGames() {
         db.collection("games").addSnapshotListener { snapshot, e ->
@@ -61,7 +32,47 @@ class GamesViewModel : ViewModel() {
                 Log.w("GamesViewModel", "Listen failed.", e)
                 return@addSnapshotListener
             }
-            _games.value = snapshot?.toObjects(Game::class.java) ?: emptyList()
+            val gamesList = mutableListOf<Game>()
+            snapshot?.documents?.forEach { document ->
+                document.toObject(Game::class.java)?.let { game ->
+                    game.id = document.id
+                    gamesList.add(game)
+                    loadTeamData(game.local)
+                    loadTeamData(game.visitor)
+                }
+            }
+            _games.value = gamesList
         }
     }
+
+    private fun loadTeamData(teamId: String?) {
+        teamId?.let { id ->
+            db.collection("teams").document(id).addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w("GamesViewModel", "Error loading team data for ID: $id", e)
+                    return@addSnapshotListener
+                }
+                val team = snapshot?.toObject(Team::class.java)
+                team?.let {
+                    val details = _teamDetails.value.toMutableMap()
+                    details[id] = TeamDetails(it.name, it.imageUrl)
+                    _teamDetails.value = details
+                    updateGamesWithNewTeamDetails(id, it)
+                }
+            }
+        }
+    }
+    private fun updateGamesWithNewTeamDetails(teamId: String, team: Team) {
+        val updatedGames = _games.value.map { game ->
+            when (teamId) {
+                game.local -> game.copy(localName = team.name, localImage = team.imageUrl)
+                game.visitor -> game.copy(visitorName = team.name, visitorImage = team.imageUrl)
+                else -> game
+            }
+        }
+        _games.value = updatedGames
+    }
+
 }
+
+

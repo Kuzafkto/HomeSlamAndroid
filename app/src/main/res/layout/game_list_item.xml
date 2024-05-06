@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/imageViewLocal"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Circle"
                 android:scaleType="centerCrop" />
 
@@ -61,8 +61,8 @@
 
             <ImageView
                 android:id="@+id/imageViewVisitor"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Circle"
                 android:scaleType="centerCrop" /> <!-- Replace with actual image handling logic -->
 
