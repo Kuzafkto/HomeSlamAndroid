@@ -6,5 +6,5 @@ import com.example.tfgproject.model.Team
 data class GameDetails(
     val game: Game,
     val localTeam: Team?,
-    val visitorTeam: Team?
+    val visitorTeam: Team?,
 )

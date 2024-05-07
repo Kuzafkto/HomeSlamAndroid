@@ -33,12 +33,10 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMatchDetailBinding.inflate(inflater, container, false)
-        return binding.root // Return the root of the binding layout
+        return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,9 +48,12 @@ class MatchDetailFragment : Fragment() {
         binding.checkBoxLocal.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.checkBoxVisitor.isChecked = false
-                viewModel.gameDetails.value?.let {
-
-                    it.game.id?.let { it1 -> viewModel.updateVote(it1, it.localTeam?.id ?: "ERROR PASANDO ID") }
+                viewModel.gameDetails.value?.let { details ->
+                    details.localTeam?.id?.let { teamId ->
+                        details.game.id?.let { gameId ->
+                            viewModel.voteForTeam(gameId, teamId)
+                        }
+                    }
                 }
             }
         }
@@ -60,28 +61,53 @@ class MatchDetailFragment : Fragment() {
         binding.checkBoxVisitor.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.checkBoxLocal.isChecked = false
-                viewModel.gameDetails.value?.let {
-                    it.game.id?.let { it1 -> viewModel.updateVote(it1, it.visitorTeam?.id ?: "ERROR PASANDO EL ID") }
+                viewModel.gameDetails.value?.let { details ->
+                    details.visitorTeam?.id?.let { teamId ->
+                        details.game.id?.let { gameId ->
+                            viewModel.voteForTeam(gameId, teamId)
+                        }
+                    }
                 }
             }
         }
     }
-
 
 
     private fun observeGameDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.gameDetails.collect { details ->
                 details?.let {
+                    viewModel.loadUserVote(it.game.id ?: "")
                     toolbarViewModel.setTitle("${it.localTeam?.name} vs ${it.visitorTeam?.name}")
-                    binding.tvLocalTeamName.text= it.localTeam?.name?:"Indefinido"
-                    binding.tvVisitorTeamName.text= it.visitorTeam?.name?:"Indefinido"
+                    binding.tvLocalTeamName.text = it.localTeam?.name ?: "Indefinido"
+                    binding.tvVisitorTeamName.text = it.visitorTeam?.name ?: "Indefinido"
                     binding.tvStory.text = it.game.story ?: "No story available"
                     loadImages(it.localTeam?.imageUrl, it.visitorTeam?.imageUrl)
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userVoteTeamId.collect { teamId ->
+                updateCheckboxes(teamId)
+            }
+        }
     }
+
+    private fun updateCheckboxes(teamId: String?) {
+        val localTeamId = viewModel.gameDetails.value?.localTeam?.id
+        val visitorTeamId = viewModel.gameDetails.value?.visitorTeam?.id
+
+        if (localTeamId != null && visitorTeamId != null) {
+            binding.checkBoxLocal.isChecked = teamId == localTeamId
+            binding.checkBoxVisitor.isChecked = teamId == visitorTeamId
+        } else {
+            // esto es para q no las marque como true al iniciar el fragmento pq aun no estan seteados
+            binding.checkBoxLocal.isChecked = false
+            binding.checkBoxVisitor.isChecked = false
+        }
+    }
+
 
 
     private fun loadImages(localImageUrl: String?, visitorImageUrl: String?) {

@@ -20,5 +20,8 @@
     <string name="read_more">Read more</string>
     <string name="default_story_text">Historia por defecto</string>
     <string name="default_title">Indefinido</string>
+    <string name="nickname">nombre de usuario</string>
+    <string name="name">Nombre</string>
+    <string name="select_image">Selecciona una imagen</string>
 
 </resources>

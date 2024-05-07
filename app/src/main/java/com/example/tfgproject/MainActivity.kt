@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity() {
         }
         val profileButton = binding.buttonProfile
         profileButton.setOnClickListener {
-            // Utiliza el NavController para navegar al fragmento de perfil
-            navController.navigate(R.id.navigation_profile) // Reemplaza 'profileFragment' con el ID real de tu destino de perfil en nav_graph.xml
+            // utiliza el NavController para navegar al fragmento de perfil
+            navController.navigate(R.id.navigation_profile)
         }
 
 
@@ -91,11 +91,11 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         appBarConfiguration= AppBarConfiguration(
             setOf(
-                R.id.navigation_noticias, // ID para Noticias
-                R.id.navigation_partidos, // ID para Partidos
-                R.id.navigation_equipos,   // ID para Equipos
+                R.id.navigation_noticias,
+                R.id.navigation_partidos,
+                R.id.navigation_equipos,
                 R.id.navigation_login,
-                R.id.action_global_navigation_login, // ID para Equipos
+                R.id.action_global_navigation_login,
             )
         )
 
@@ -105,15 +105,14 @@ class MainActivity : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         loginViewModel.isAuthenticated.observe(this) { isAuthenticated ->
             if (!isAuthenticated) {
-                // El usuario no está autenticado, navegar al com.example.tfgproject.ui.login.LoginFragment
+                // ll usuario no está autenticado, navegar al loginFragment
                 navController.navigate(R.id.action_global_navigation_login)
             }
         }
 
 
-        // Set a listener that will be called before the NavController attempts to navigate to each destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Si el usuario no está autenticado y el destino no es el LoginFragment,
+            // Ss el usuario no está autenticado y el destino no es el LoginFragment,
             // entonces redirige al LoginFragment.
             if (!loginViewModel.isAuthenticated.value!! && destination.id != R.id.loginFragment) {
                 navController.navigate(R.id.action_global_navigation_login)
@@ -121,27 +120,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Verifica si el destino actual es el LoginFragment
             if (destination.id == R.id.loginFragment) {
-                // Oculta la BottomNavigationView
+
                 binding.navView.visibility = View.GONE
                 hamburgerButton.visibility=View.GONE
                 profileButton.visibility=View.GONE
             } else {
-                // Muestra la BottomNavigationView si el usuario no está en LoginFragment
                 binding.navView.visibility = View.VISIBLE
                 hamburgerButton.visibility=View.VISIBLE
                 profileButton.visibility=View.VISIBLE
             }
 
-            // Aquí también deberías poner tu lógica para redirigir al usuario si no está autenticado
-            // y no está en LoginFragment (como el código del comentario anterior).
         }
     }
 
     private fun navigateToLogin() {
         val loginIntent = Intent(this, LoginActivity::class.java)
-        // Opcional: Limpia la pila de actividades para que el usuario no pueda volver a la MainActivity sin autenticarse.
+        // limpia la pila de actividades para que el usuario no pueda volver a la MainActivity sin autenticarse.
         loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(loginIntent)
         finish()
