@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/partidosFragment"
-        android:name="com.example.tfgproject.ui.matches.PartidosFragment"
+        android:name="com.example.tfgproject.ui.games.GamesFragment"
         android:label="Partidos"
-        tools:layout="@layout/fragment_partidos">
+        tools:layout="@layout/fragment_games">
         <action
             android:id="@+id/action_partidosFragment_to_matchDetailFragment"
             app:destination="@id/matchDetailFragment" />

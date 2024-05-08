@@ -9,7 +9,6 @@ import coil.transform.CircleCropTransformation
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.TeamListItemBinding
 import com.example.tfgproject.model.Team
-
 class TeamAdapter(
     private var teams: List<Team>,
     private val onTeamClicked: (String) -> Unit
@@ -24,6 +23,8 @@ class TeamAdapter(
                 error(R.drawable.error_image)
                 transformations(CircleCropTransformation())
             }
+            binding.textGamesWon.text = "Won: ${team.gamesWon}"
+            binding.textGamesLost.text = "Lost: ${team.gamesLost}"
             binding.root.setOnClickListener {
                 if (team.id.isNullOrEmpty()) {
                     Log.e("TeamAdapter", "Error: Team ID is null or empty for team: ${team.name}")

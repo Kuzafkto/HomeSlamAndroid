@@ -1,37 +1,64 @@
-<!-- team_list_item.xml -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="4dp"
-    style="@style/Widget.Material3.CardView.Elevated">
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/teamImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/ic_launcher_background"
-            android:contentDescription="content" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/title_equipos"
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/teamName"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:text="Team Name"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:paddingStart="16dp"
-            android:text="Team Name"
-            tools:text="Team X" />
+            android:layout_gravity="center_horizontal" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseball_icon" />
+
+            <TextView
+                android:id="@+id/textGamesWon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ganados: 0" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profile_icon" />
+
+            <TextView
+                android:id="@+id/textGamesLost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perdidos: 0" />
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

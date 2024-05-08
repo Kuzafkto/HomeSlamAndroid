@@ -72,11 +72,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val hamburgerButton=binding.buttonHamburger
+        /*val hamburgerButton=binding.buttonHamburger
         hamburgerButton.setOnClickListener {
             // Log para el botón hamburguesa
             Log.d(TAG, "Hamburger menu clicked")
-        }
+        }*/
         val profileButton = binding.buttonProfile
         profileButton.setOnClickListener {
             // utiliza el NavController para navegar al fragmento de perfil
@@ -120,14 +120,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment) {
+            if (destination.id == R.id.loginFragment||destination.id==R.id.ProfileFragment) {
 
                 binding.navView.visibility = View.GONE
-                hamburgerButton.visibility=View.GONE
+                //hamburgerButton.visibility=View.GONE
                 profileButton.visibility=View.GONE
             } else {
                 binding.navView.visibility = View.VISIBLE
-                hamburgerButton.visibility=View.VISIBLE
+                //hamburgerButton.visibility=View.VISIBLE esto cuando implementemos el button se descomenta
                 profileButton.visibility=View.VISIBLE
             }
 

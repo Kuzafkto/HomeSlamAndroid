@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentEquiposBinding
@@ -44,7 +45,8 @@ class EquiposFragment : Fragment() {
 
         binding.recyclerViewTeams.apply {
             adapter = teamAdapter
-            layoutManager = LinearLayoutManager(context)
+            // Establece el layoutManager a GridLayoutManager con 2 columnas
+            layoutManager = GridLayoutManager(context, 2)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

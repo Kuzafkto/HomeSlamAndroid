@@ -8,6 +8,7 @@ data class Team(
     @PropertyName("name") var name: String? = null,
     @PropertyName("players") var players: List<String>? = null,
     @PropertyName("story") var story: String? = null,
-    @PropertyName("imageUrl") var imageUrl:  String? = null
-
+    @PropertyName("imageUrl") var imageUrl:  String? = null,
+    var gamesWon: Int = 0,
+    var gamesLost: Int = 0
 )

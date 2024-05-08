@@ -1,4 +1,4 @@
-package com.example.tfgproject.ui.matches
+package com.example.tfgproject.ui.games
 
 import android.os.Bundle
 import android.util.Log
@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tfgproject.databinding.FragmentPartidosBinding // Asegúrate de tener este import correcto
+import com.example.tfgproject.databinding.FragmentGamesBinding // Asegúrate de tener este import correcto
 import com.example.tfgproject.model.Game
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
 import kotlinx.coroutines.launch
 
-class PartidosFragment : Fragment() {
+class GamesFragment : Fragment() {
 
-    private lateinit var binding: FragmentPartidosBinding
+    private lateinit var binding: FragmentGamesBinding
     private val viewModel: GamesViewModel by viewModels()
     private lateinit var toolbarViewModel: ToolbarViewModel
 
@@ -27,7 +27,7 @@ class PartidosFragment : Fragment() {
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentPartidosBinding.inflate(inflater, container, false)
+        binding = FragmentGamesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,7 +36,7 @@ class PartidosFragment : Fragment() {
         toolbarViewModel.setTitle("Partidos")
         val gameAdapter = GameAdapter(emptyList(), viewModel) { game ->
             Log.d("GAME",game.toString())
-            val action = PartidosFragmentDirections.actionPartidosFragmentToMatchDetailFragment(game as Game)
+            val action = GamesFragmentDirections.actionPartidosFragmentToMatchDetailFragment(game as Game)
             findNavController().navigate(action)
 
         }
