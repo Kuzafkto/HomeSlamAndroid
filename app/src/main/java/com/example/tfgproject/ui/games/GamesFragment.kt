@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentGamesBinding // Asegúrate de tener este import correcto
 import com.example.tfgproject.model.Game
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
@@ -33,7 +34,7 @@ class GamesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarViewModel.setTitle("Partidos")
+        toolbarViewModel.setTitle(getString(R.string.title_partidos))
         val gameAdapter = GameAdapter(emptyList(), viewModel) { game ->
             Log.d("GAME",game.toString())
             val action = GamesFragmentDirections.actionPartidosFragmentToMatchDetailFragment(game as Game)

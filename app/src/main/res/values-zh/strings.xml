@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HomeSlam</string>
+
+    <string name="title_equipos">球队</string>
+    <string name="title_noticias">新闻</string>
+    <string name="title_partidos">比赛</string>
+    <string name="hamburger_menu_description">侧边菜单</string>
+    <string name="profile_description">我的资料</string>
+    <string name="my_title">我的资料</string>
+    <string name="email">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="read_less">收起</string>
+    <string name="read_more">展开</string>
+    <string name="default_story_text">默认故事</string>
+    <string name="default_title">未定义</string>
+    <string name="nickname">用户名</string>
+    <string name="name">姓名</string>
+    <string name="select_image">选择图片</string>
+    <string name="victorias">胜利</string>
+    <string name="derrotas">失败</string>
+    <string name="default_team_text">球队</string>
+    <string name="default_story_title">故事</string>
+    <string name="profile_image">个人资料图片</string>
+    <string name="non_empty_field_error">任何字段都不应为空</string>
+    <string name="auth_failed">身份验证失败</string>
+    <string name="registration_failed">注册失败</string>
+</resources>

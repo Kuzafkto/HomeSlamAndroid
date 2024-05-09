@@ -87,7 +87,7 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/nav_background"
+        android:background="@color/green_background"
         app:itemIconTint="@color/nav_item_icon_color"
         app:itemBackground="@drawable/transparent"
         app:itemTextColor="@color/nav_item_text_color"

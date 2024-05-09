@@ -50,19 +50,27 @@
 
             <!-- Story section -->
             <TextView
-                android:id="@+id/textViewStory"
+                android:id="@+id/tvStoryTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Short Story"
-                android:maxLength="200"
-                android:ellipsize="end"
-                android:maxLines="2" />
+                android:layout_marginTop="20dp"
+                android:text="@string/default_story_title"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvStory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/default_story_text"
+                android:textSize="16sp"
+                />
 
             <Button
-                android:id="@+id/buttonReadMore"
+                android:id="@+id/btnReadMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Read More" />
+                android:textColor="@color/white"
+                android:text="@string/read_more" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -36,7 +36,7 @@ class EquiposFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarViewModel.setTitle("Equipos")
+        toolbarViewModel.setTitle(getString(R.string.title_equipos))
 
         val teamAdapter = TeamAdapter(emptyList()) { teamId ->
             val action = EquiposFragmentDirections.actionEquiposFragmentToTeamDetailFragment(teamId)

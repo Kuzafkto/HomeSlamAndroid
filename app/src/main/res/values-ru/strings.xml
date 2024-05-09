@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HomeSlam</string>
+
+    <string name="title_equipos">Команды</string>
+    <string name="title_noticias">Новости</string>
+    <string name="title_partidos">Матчи</string>
+    <string name="hamburger_menu_description">Выпадающее меню</string>
+    <string name="profile_description">Мой профиль</string>
+    <string name="my_title">Мой профиль</string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="read_less">Читать меньше</string>
+    <string name="read_more">Читать больше</string>
+    <string name="default_story_text">Стандартная история</string>
+    <string name="default_title">Неопределенный</string>
+    <string name="nickname">Имя пользователя</string>
+    <string name="name">Имя</string>
+    <string name="select_image">Выбрать изображение</string>
+    <string name="victorias">Победы</string>
+    <string name="derrotas">Поражения</string>
+    <string name="default_team_text">Команда</string>
+    <string name="default_story_title">История</string>
+    <string name="profile_image">Фото профиля</string>
+    <string name="non_empty_field_error">Ни одно из полей не должно быть пустым</string>
+    <string name="auth_failed">Ошибка аутентификации</string>
+    <string name="registration_failed">Ошибка регистрации</string>
+</resources>

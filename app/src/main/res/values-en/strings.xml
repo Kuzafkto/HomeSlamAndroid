@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HomeSlam</string>
+
+    <string name="title_equipos">Teams</string>
+    <string name="title_noticias">News</string>
+    <string name="title_partidos">Matches</string>
+    <string name="hamburger_menu_description">Hamburger Menu</string>
+    <string name="profile_description">My Profile</string>
+    <string name="my_title">My Profile</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="read_less">Read less</string>
+    <string name="read_more">Read more</string>
+    <string name="default_story_text">Default Story</string>
+    <string name="default_title">Undefined</string>
+    <string name="nickname">Username</string>
+    <string name="name">Name</string>
+    <string name="select_image">Select an image</string>
+    <string name="victorias">Victories</string>
+    <string name="derrotas">Defeats</string>
+    <string name="default_team_text">Team</string>
+    <string name="default_story_title">Story</string>
+    <string name="profile_image">Profile Picture</string>
+    <string name="non_empty_field_error">None of the fields should be empty</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="registration_failed">Registration failed</string>
+</resources>

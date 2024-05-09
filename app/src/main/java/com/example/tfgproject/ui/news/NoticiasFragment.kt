@@ -37,14 +37,10 @@ class NoticiasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarViewModel.setTitle("Noticias")
+        toolbarViewModel.setTitle(getString(com.example.tfgproject.R.string.title_noticias))
 
         val userUID = auth.currentUser?.uid
         binding.userEmailTextView.text = userUID ?: "Usuario no autenticado"
-    }
-    override fun onResume() {
-        super.onResume()
-        toolbarViewModel.setTitle("Noticias")
     }
     override fun onDestroyView() {
         super.onDestroyView()

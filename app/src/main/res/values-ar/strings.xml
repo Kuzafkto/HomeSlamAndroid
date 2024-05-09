@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HomeSlam</string>
+
+    <string name="title_equipos">الفرق</string>
+    <string name="title_noticias">أخبار</string>
+    <string name="title_partidos">مباريات</string>
+    <string name="hamburger_menu_description">القائمة المنسدلة</string>
+    <string name="profile_description">ملفي الشخصي</string>
+    <string name="my_title">ملفي الشخصي</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="register">تسجيل</string>
+    <string name="read_less">قراءة أقل</string>
+    <string name="read_more">قراءة المزيد</string>
+    <string name="default_story_text">القصة الافتراضية</string>
+    <string name="default_title">غير محدد</string>
+    <string name="nickname">اسم المستخدم</string>
+    <string name="name">الاسم</string>
+    <string name="select_image">اختر صورة</string>
+    <string name="victorias">الانتصارات</string>
+    <string name="derrotas">الهزائم</string>
+    <string name="default_team_text">الفريق</string>
+    <string name="default_story_title">القصة</string>
+    <string name="profile_image">صورة الملف الشخصي</string>
+    <string name="non_empty_field_error">لا يجب أن يكون أي من الحقول فارغًا</string>
+    <string name="auth_failed">فشل التوثيق</string>
+    <string name="registration_failed">فشل التسجيل</string>
+</resources>

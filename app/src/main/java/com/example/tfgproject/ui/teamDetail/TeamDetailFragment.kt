@@ -1,6 +1,7 @@
 package com.example.tfgproject.ui.teamDetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,8 @@ class TeamDetailFragment : Fragment() {
         viewModel.loadTeamDetails(teamId)
         setupRecyclerView()
         observeTeamAndPlayers()
+        setupReadMoreButton()
+
     }
 
     private fun setupRecyclerView() {
@@ -45,29 +48,50 @@ class TeamDetailFragment : Fragment() {
 
     private fun observeTeamAndPlayers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                viewModel.team.collect { team ->
-                    if (team != null) {
-                        // Actualiza el texto de la historia
-                        binding.textViewStory.text = team.story ?: getString(R.string.default_story_text)
-
-                        // Carga la imagen del equipo
-                        binding.imageViewTeam.load(team.imageUrl) {
-                            placeholder(R.drawable.placeholder_image)
-                            error(R.drawable.error_image)
-                        }
-                        toolbarViewModel.setTitle(team.name ?: getString(R.string.default_title))
+            viewModel.team.collect { team ->
+                if (team != null) {
+                    toolbarViewModel.setTitle(team.name ?: getString(R.string.title_equipos))
+                    binding.imageViewTeam.load(team.imageUrl) {
+                        placeholder(R.drawable.placeholder_image)
+                        error(R.drawable.error_image)
                     }
-                }
-            }
-
-            launch {
-                viewModel.players.collect { players ->
-                    (binding.recyclerViewPlayers.adapter as PlayerAdapter).updatePlayers(players)
+                    updateStoryText()
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.players.collect { players ->
+                (binding.recyclerViewPlayers.adapter as PlayerAdapter).updatePlayers(players)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isTextExpanded.collect {
+                updateStoryText()
+            }
+        }
     }
+
+
+    private fun setupReadMoreButton() {
+        binding.btnReadMore.setOnClickListener {
+            viewModel.toggleTextExpansion()  // Toggle the expanded state in ViewModel
+            updateStoryText()
+        }
+    }
+    private fun updateStoryText() {
+        val fullText = viewModel.team.value?.story ?: getString(R.string.default_story_text)
+        val isExpanded = viewModel.isTextExpanded.value
+        Log.d("valuetest",viewModel.isTextExpanded.value.toString())
+        binding.tvStory.text = if (isExpanded) {
+            fullText
+        } else {
+            if (fullText.length > 200) fullText.take(200) + "..." else fullText
+        }
+        binding.btnReadMore.text = if (isExpanded) getString(R.string.read_less) else getString(R.string.read_more)
+    }
+
 
 
 }

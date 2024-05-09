@@ -22,6 +22,12 @@ class MatchDetailViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val _userVoteTeamId = MutableStateFlow<String?>(null)
     val userVoteTeamId: StateFlow<String?> = _userVoteTeamId
+    val isTextExpanded = MutableStateFlow(false)  // Manage text expanded state here
+
+    fun toggleTextExpansion() {
+        isTextExpanded.value = !isTextExpanded.value
+    }
+
 
     fun voteForTeam(gameId: String, teamId: String) {
         val userId = auth.currentUser?.uid ?: return  // Salir si no hay usuario autenticado

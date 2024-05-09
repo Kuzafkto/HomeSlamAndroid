@@ -42,7 +42,26 @@ class MatchDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeGameDetails()
         setupCheckboxBehavior()
+        setupReadMoreButton()
     }
+
+    private fun setupReadMoreButton() {
+        binding.btnReadMore.setOnClickListener {
+            viewModel.toggleTextExpansion()  // Toggle the expanded state in ViewModel
+            updateStoryText()
+        }
+    }
+    private fun updateStoryText() {
+        val fullText = viewModel.gameDetails.value?.game?.story ?: getString(R.string.default_story_text)
+        val isExpanded = viewModel.isTextExpanded.value
+        binding.tvStory.text = if (isExpanded) {
+            fullText
+        } else {
+            if (fullText.length > 200) fullText.take(200) + "..." else fullText
+        }
+        binding.btnReadMore.text = if (isExpanded) getString(R.string.read_less) else getString(R.string.read_more)
+    }
+
 
     private fun setupCheckboxBehavior() {
         binding.checkBoxLocal.setOnCheckedChangeListener { _, isChecked ->
@@ -81,7 +100,8 @@ class MatchDetailFragment : Fragment() {
                     toolbarViewModel.setTitle("${it.localTeam?.name} vs ${it.visitorTeam?.name}")
                     binding.tvLocalTeamName.text = it.localTeam?.name ?: "Indefinido"
                     binding.tvVisitorTeamName.text = it.visitorTeam?.name ?: "Indefinido"
-                    binding.tvStory.text = it.game.story ?: "No story available"
+                    updateStoryText()
+                    //binding.tvStory.text = it.game.story ?: "No story available"
                     loadImages(it.localTeam?.imageUrl, it.visitorTeam?.imageUrl)
                 }
             }

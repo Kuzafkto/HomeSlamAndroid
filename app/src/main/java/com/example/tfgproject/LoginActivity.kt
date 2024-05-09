@@ -4,10 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.tfgproject.databinding.ActivityLoginBinding
+import com.example.tfgproject.databinding.ActivityMainBinding
 import com.example.tfgproject.ui.login.LoginFragment
 import com.example.tfgproject.ui.register.RegisterFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -15,12 +17,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.storage
 
 class LoginActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding=ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         auth = Firebase.auth
         db = FirebaseFirestore.getInstance()
 
@@ -45,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun signInWithEmailAndPassword(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Ninguno de los campos debe estar vacio", Toast.LENGTH_SHORT).show()
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.non_empty_field_error), Snackbar.LENGTH_LONG).show()
             return
         }
 
@@ -57,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     finish()
                 } else {
                     Log.w("LoginActivity", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(findViewById(android.R.id.content), "${getString(R.string.auth_failed)}: ${task.exception?.message}", Snackbar.LENGTH_LONG).show()
                 }
             }
     }

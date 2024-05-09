@@ -23,8 +23,8 @@ class TeamAdapter(
                 error(R.drawable.error_image)
                 transformations(CircleCropTransformation())
             }
-            binding.textGamesWon.text = "Won: ${team.gamesWon}"
-            binding.textGamesLost.text = "Lost: ${team.gamesLost}"
+            binding.textGamesWon.text = team.gamesWon.toString()
+            binding.textGamesLost.text = team.gamesLost.toString()
             binding.root.setOnClickListener {
                 if (team.id.isNullOrEmpty()) {
                     Log.e("TeamAdapter", "Error: Team ID is null or empty for team: ${team.name}")

@@ -18,10 +18,9 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
-
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -67,7 +66,7 @@ class RegisterFragment : Fragment() {
 
     private fun createUserWithEmailAndPassword(email: String, password: String, name: String, nickname: String) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()||nickname.isEmpty()) {
-            Toast.makeText(context, "Ninguno de los datos debe de estar vacio", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.non_empty_field_error), Snackbar.LENGTH_LONG).show()
             return
         }
         val activity = activity as? LoginActivity ?: return
@@ -100,7 +99,8 @@ class RegisterFragment : Fragment() {
                 }
             } else {
                 Log.e("Authentication", "Registration failed", task.exception)
-                Toast.makeText(context, "Registration failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+
+                Snackbar.make(binding.root, getString(R.string.registration_failed), Snackbar.LENGTH_LONG).show()
             }
         }
     }

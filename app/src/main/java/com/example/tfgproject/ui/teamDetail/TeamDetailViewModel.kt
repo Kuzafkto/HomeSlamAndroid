@@ -18,6 +18,14 @@ class TeamDetailViewModel : ViewModel() {
 
     private val _players = MutableStateFlow<List<Player>>(emptyList())
     val players: StateFlow<List<Player>> = _players.asStateFlow()
+    val isTextExpanded = MutableStateFlow(false)  // Manage text expanded state here
+
+    fun toggleTextExpansion() {
+        isTextExpanded.value = !isTextExpanded.value
+    }
+
+
+
 
     fun loadTeamDetails(teamId: String) {
         db.collection("teams").document(teamId).get().addOnSuccessListener { document ->

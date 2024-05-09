@@ -7,5 +7,6 @@
     <color name="nav_item_selected">#FF000000</color>
     <color name="nav_item_unselected">#FF000000</color>
     <color name="toolbar_background_color">#1D1D00</color>
+    <color name="green_background">#005625</color>
 
 </resources>
