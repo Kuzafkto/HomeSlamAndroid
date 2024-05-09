@@ -24,18 +24,20 @@ class TeamDetailViewModel : ViewModel() {
         isTextExpanded.value = !isTextExpanded.value
     }
 
-
-
-
     fun loadTeamDetails(teamId: String) {
-        db.collection("teams").document(teamId).get().addOnSuccessListener { document ->
-            val team = document.toObject(Team::class.java)?.apply { id = document.id }
+        val teamRef = db.collection("teams").document(teamId)
+        teamRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.e("TeamDetailViewModel", "Error loading team details", e)
+                return@addSnapshotListener
+            }
+
+            val team = snapshot?.toObject(Team::class.java)?.apply { id = snapshot.id }
             _team.value = team
             team?.players?.let { loadPlayers(it) }
-        }.addOnFailureListener { e ->
-            Log.e("TeamDetailViewModel", "Error loading team details", e)
         }
     }
+
 
     private fun loadPlayers(playerIds: List<String>) {
         db.collection("players")

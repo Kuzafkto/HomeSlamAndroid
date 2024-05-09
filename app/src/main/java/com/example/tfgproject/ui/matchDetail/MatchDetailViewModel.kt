@@ -11,18 +11,15 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class MatchDetailViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val _gameDetails = MutableStateFlow<GameDetails?>(null)
     val gameDetails: StateFlow<GameDetails?> = _gameDetails
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid  // Asumiendo que el usuario está autenticado
     private val auth = FirebaseAuth.getInstance()
     private val _userVoteTeamId = MutableStateFlow<String?>(null)
     val userVoteTeamId: StateFlow<String?> = _userVoteTeamId
-    val isTextExpanded = MutableStateFlow(false)  // Manage text expanded state here
+    val isTextExpanded = MutableStateFlow(false)
 
     fun toggleTextExpansion() {
         isTextExpanded.value = !isTextExpanded.value
@@ -30,9 +27,8 @@ class MatchDetailViewModel : ViewModel() {
 
 
     fun voteForTeam(gameId: String, teamId: String) {
-        val userId = auth.currentUser?.uid ?: return  // Salir si no hay usuario autenticado
+        val userId = auth.currentUser?.uid ?: return
 
-        // Obtener los votos del usuario
         db.collection("users").document(userId).get()
             .addOnSuccessListener { userDocument ->
                 val userVotes = userDocument["votes"] as? List<String> ?: listOf()
@@ -62,7 +58,6 @@ class MatchDetailViewModel : ViewModel() {
         )
         db.collection("votes").add(newVoteData)
             .addOnSuccessListener { voteRef ->
-                // Agregar la nueva referencia de voto al array de votos del usuario
                 val updatedVotes = userVotes + voteRef.id
                 userRef.update("votes", updatedVotes)
                 Log.d("MatchDetailViewModel", "Vote successfully created for team ID: $teamId")
@@ -83,29 +78,47 @@ class MatchDetailViewModel : ViewModel() {
 
 
     fun loadGameDetails(game: Game) {
-        viewModelScope.launch {
-            val localRef = db.collection("teams").document(game.local ?: "")
-            localRef.addSnapshotListener { snapshot, e ->
+        db.collection("games").document(game.id ?: return)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w("MatchDetailViewModel", "Error loading game data", e)
+                    return@addSnapshotListener
+                }
+                snapshot?.toObject(Game::class.java)?.let { updatedGame ->
+                    updateGameDetails(updatedGame)
+                }
+            }
+
+        db.collection("teams").document(game.local ?: "")
+            .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w("MatchDetailViewModel", "Error loading local team data", e)
                     return@addSnapshotListener
                 }
-                val localTeam = snapshot?.toObject(Team::class.java)?.apply { id = snapshot.id }
-                val visitorTeam = _gameDetails.value?.visitorTeam
-                _gameDetails.value = GameDetails(game, localTeam, visitorTeam)
+                snapshot?.toObject(Team::class.java)?.apply {
+                    id = snapshot.id
+                    val currentDetails = _gameDetails.value
+                    _gameDetails.value = currentDetails?.copy(localTeam = this) ?: GameDetails(game, this, null)
+                }
             }
 
-            val visitorRef = db.collection("teams").document(game.visitor ?: "")
-            visitorRef.addSnapshotListener { snapshot, e ->
+        db.collection("teams").document(game.visitor ?: "")
+            .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w("MatchDetailViewModel", "Error loading visitor team data", e)
                     return@addSnapshotListener
                 }
-                val visitorTeam = snapshot?.toObject(Team::class.java)?.apply { id = snapshot.id }
-                val localTeam = _gameDetails.value?.localTeam
-                _gameDetails.value = GameDetails(game, localTeam, visitorTeam)
+                snapshot?.toObject(Team::class.java)?.apply {
+                    id = snapshot.id
+                    val currentDetails = _gameDetails.value
+                    _gameDetails.value = currentDetails?.copy(visitorTeam = this) ?: GameDetails(game, null, this)
+                }
             }
-        }
+    }
+
+    private fun updateGameDetails(game: Game) {
+        val currentDetails = _gameDetails.value
+        _gameDetails.value = GameDetails(game, currentDetails?.localTeam, currentDetails?.visitorTeam)
     }
     fun loadUserVote(gameId: String) {
         val userId = auth.currentUser?.uid ?: return  // Asegurar que el usuario está autenticado

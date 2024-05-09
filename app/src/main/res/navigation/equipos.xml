@@ -6,7 +6,7 @@
     app:startDestination="@id/equiposFragment">
 
     <fragment android:id="@+id/equiposFragment"
-        android:name="com.example.tfgproject.ui.teams.EquiposFragment"
+        android:name="com.example.tfgproject.ui.teams.TeamsFragment"
         android:label="Equipos"
         tools:layout="@layout/fragment_equipos"> <!-- Asegúrate de que el layout está correcto -->
         <action

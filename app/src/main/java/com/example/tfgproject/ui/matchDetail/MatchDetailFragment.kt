@@ -11,9 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentMatchDetailBinding
-import com.example.tfgproject.databinding.FragmentTeamDetailBinding
 import com.example.tfgproject.model.Game
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MatchDetailFragment : Fragment() {
@@ -47,7 +47,7 @@ class MatchDetailFragment : Fragment() {
 
     private fun setupReadMoreButton() {
         binding.btnReadMore.setOnClickListener {
-            viewModel.toggleTextExpansion()  // Toggle the expanded state in ViewModel
+            viewModel.toggleTextExpansion()
             updateStoryText()
         }
     }
@@ -94,7 +94,7 @@ class MatchDetailFragment : Fragment() {
 
     private fun observeGameDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.gameDetails.collect { details ->
+            viewModel.gameDetails.collectLatest { details ->
                 details?.let {
                     viewModel.loadUserVote(it.game.id ?: "")
                     toolbarViewModel.setTitle("${it.localTeam?.name} vs ${it.visitorTeam?.name}")

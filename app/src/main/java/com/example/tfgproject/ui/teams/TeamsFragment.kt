@@ -9,15 +9,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentEquiposBinding
-import com.example.tfgproject.model.Team
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class EquiposFragment : Fragment() {
+class TeamsFragment : Fragment() {
     private var _binding: FragmentEquiposBinding? = null
     private val binding get() = _binding!!
 
@@ -39,7 +36,7 @@ class EquiposFragment : Fragment() {
         toolbarViewModel.setTitle(getString(R.string.title_equipos))
 
         val teamAdapter = TeamAdapter(emptyList()) { teamId ->
-            val action = EquiposFragmentDirections.actionEquiposFragmentToTeamDetailFragment(teamId)
+            val action = TeamsFragmentDirections.actionEquiposFragmentToTeamDetailFragment(teamId)
             findNavController().navigate(action)
         }
 

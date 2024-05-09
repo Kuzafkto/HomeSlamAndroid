@@ -1,8 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item
+      <!--  <item
             android:id="@+id/navigation_noticias"
             android:title="@string/title_noticias"
-            android:icon="@drawable/news_icon"/>
+            android:icon="@drawable/news_icon"/       descomentar una vez que noticias esten implementadas-->
         <item
             android:id="@+id/navigation_partidos"
             android:title="@string/title_partidos"

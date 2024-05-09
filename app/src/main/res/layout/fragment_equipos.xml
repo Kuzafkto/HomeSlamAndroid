@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.teams.EquiposFragment"
+    tools:context=".ui.teams.TeamsFragment"
     android:padding="16dp">
 
     <androidx.recyclerview.widget.RecyclerView
