@@ -27,4 +27,5 @@
     <string name="non_empty_field_error">Ни одно из полей не должно быть пустым</string>
     <string name="auth_failed">Ошибка аутентификации</string>
     <string name="registration_failed">Ошибка регистрации</string>
+    <string name="logout">Выйти</string>
 </resources>

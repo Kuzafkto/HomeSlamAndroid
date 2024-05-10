@@ -1,4 +1,5 @@
 package com.example.tfgproject.ui.profile
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
+import com.example.tfgproject.LoginActivity
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentProfileBinding
 import com.example.tfgproject.model.User
 import com.example.tfgproject.ui.toolbar.ToolbarViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -34,6 +37,24 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeUserData()
+        setupLogoutButton()
+    }
+
+    private fun setupLogoutButton() {
+        binding.logoutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            navigateToLogin()
+        }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    private fun observeUserData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userData.collect { user ->
                 updateUI(user)

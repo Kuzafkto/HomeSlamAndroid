@@ -27,4 +27,5 @@
     <string name="non_empty_field_error">Keines der Felder darf leer sein</string>
     <string name="auth_failed">Authentifizierung fehlgeschlagen</string>
     <string name="registration_failed">Registrierung fehlgeschlagen</string>
+    <string name="logout">Abmelden</string>
 </resources>

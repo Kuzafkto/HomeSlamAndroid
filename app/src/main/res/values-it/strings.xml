@@ -27,4 +27,5 @@
     <string name="non_empty_field_error">Nessun campo deve essere vuoto</string>
     <string name="auth_failed">Autenticazione fallita</string>
     <string name="registration_failed">Registrazione fallita</string>
+    <string name="logout">Disconnettersi</string>
 </resources>

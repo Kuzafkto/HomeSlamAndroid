@@ -27,4 +27,5 @@
     <string name="non_empty_field_error">任何字段都不应为空</string>
     <string name="auth_failed">身份验证失败</string>
     <string name="registration_failed">注册失败</string>
+    <string name="logout">注销</string>
 </resources>
