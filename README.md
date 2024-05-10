@@ -1,7 +1,6 @@
 # Video
 
-[Home Slam Android]([https://m2.material.io/develop/android/docs/getting-started](https://youtu.be/DmevUdwFjCc
-))
+[Home Slam Android]([https://m2.material.io/develop/android/docs/getting-started](https://youtu.be/DmevUdwFjCc)
 
 # Tareas Realizadas
 
