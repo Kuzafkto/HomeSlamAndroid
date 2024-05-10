@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/toolbar_background_color"
+        android:background="@color/green_background"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
@@ -35,9 +35,9 @@
 
             <TextView
                 android:id="@+id/toolbar_title"
+                android:fontFamily="@font/lekton_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Titulo por defecto"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/white"
                 android:textSize="20sp"

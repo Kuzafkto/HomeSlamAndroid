@@ -1,4 +1,4 @@
-package com.example.tfgproject.ui.matchDetail
+package com.example.tfgproject.ui.gameDetail
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,8 +9,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class MatchDetailViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -25,6 +29,11 @@ class MatchDetailViewModel : ViewModel() {
         isTextExpanded.value = !isTextExpanded.value
     }
 
+    val canVote: StateFlow<Boolean> = _gameDetails.map { details ->
+        val localRuns = details?.game?.localRuns
+        val visitorRuns = details?.game?.visitorRuns
+        localRuns == null || visitorRuns == null || localRuns == "?" || visitorRuns == "?"
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true) //estp simplemente pasa de flow a stateflow
 
     fun voteForTeam(gameId: String, teamId: String) {
         val userId = auth.currentUser?.uid ?: return
@@ -32,11 +41,10 @@ class MatchDetailViewModel : ViewModel() {
         db.collection("users").document(userId).get()
             .addOnSuccessListener { userDocument ->
                 val userVotes = userDocument["votes"] as? List<String> ?: listOf()
+
                 if (userVotes.isEmpty()) {
-                    // No hay votos, crear uno nuevo directamente
                     createVote(gameId, teamId, userVotes, userDocument.reference)
                 } else {
-                    // Buscar si ya existe un voto para este juego
                     db.collection("votes").whereIn(FieldPath.documentId(), userVotes).get()
                         .addOnSuccessListener { votesSnapshot ->
                             val existingVote = votesSnapshot.documents.find { it.getString("game") == gameId }
@@ -48,7 +56,11 @@ class MatchDetailViewModel : ViewModel() {
                         }
                 }
             }
+            .addOnFailureListener { e ->
+                Log.e("VoteForTeam", "Error al cargar los votos del usuario", e)
+            }
     }
+
 
     private fun createVote(gameId: String, teamId: String, userVotes: List<String>, userRef: DocumentReference) {
         val newVoteData = mapOf(
@@ -60,10 +72,10 @@ class MatchDetailViewModel : ViewModel() {
             .addOnSuccessListener { voteRef ->
                 val updatedVotes = userVotes + voteRef.id
                 userRef.update("votes", updatedVotes)
-                Log.d("MatchDetailViewModel", "Vote successfully created for team ID: $teamId")
+                Log.d("MatchDetailViewModel", "voto creado con id : $teamId")
             }
             .addOnFailureListener { e ->
-                Log.e("MatchDetailViewModel", "Failed to create vote", e)
+                Log.e("MatchDetailViewModel", "fallo en crear el voto", e)
             }
     }
 
@@ -72,7 +84,7 @@ class MatchDetailViewModel : ViewModel() {
         db.collection("votes").document(voteId)
             .update("reference", teamId)  // Actualizar referencia del equipo
             .addOnSuccessListener {
-                Log.d("MatchDetailViewModel", "Vote updated successfully for team ID: $teamId")
+                Log.d("MatchDetailViewModel", "voto actualizado con id : $teamId")
             }
     }
 
@@ -81,7 +93,6 @@ class MatchDetailViewModel : ViewModel() {
         db.collection("games").document(game.id ?: return)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    Log.w("MatchDetailViewModel", "Error loading game data", e)
                     return@addSnapshotListener
                 }
                 snapshot?.toObject(Game::class.java)?.let { updatedGame ->
@@ -92,7 +103,6 @@ class MatchDetailViewModel : ViewModel() {
         db.collection("teams").document(game.local ?: "")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    Log.w("MatchDetailViewModel", "Error loading local team data", e)
                     return@addSnapshotListener
                 }
                 snapshot?.toObject(Team::class.java)?.apply {
@@ -105,7 +115,6 @@ class MatchDetailViewModel : ViewModel() {
         db.collection("teams").document(game.visitor ?: "")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    Log.w("MatchDetailViewModel", "Error loading visitor team data", e)
                     return@addSnapshotListener
                 }
                 snapshot?.toObject(Team::class.java)?.apply {

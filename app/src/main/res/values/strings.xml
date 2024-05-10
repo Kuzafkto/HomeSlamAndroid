@@ -6,7 +6,7 @@
     <string name="title_partidos">Partidos</string>
     <string name="hamburger_menu_description">Menu desplegable</string>
     <string name="profile_description">Mi perfil</string>
-    <string name="my_title">Mi perfil</string>
+    <string name="profile">Perfil</string>
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="login">Login</string>
@@ -26,5 +26,6 @@
     <string name="non_empty_field_error">Ninguno de los campos debe estar vacio</string>
     <string name="auth_failed">Autenticación fallida</string>
     <string name="registration_failed">Registro fallido</string>
+    <string name="logout">Cerrar sesión</string>
 
 </resources>

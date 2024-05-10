@@ -44,10 +44,11 @@ class ProfileFragment : Fragment() {
     private fun updateUI(user: User?) {
         user?.let {
             if(it.nickname!=null){
-                toolbarViewModel.setTitle(it.nickname!!)
+                binding.profileTitle.text=it.nickname
             }else{
                 toolbarViewModel.setTitle("????")
             }
+            toolbarViewModel.setTitle(getString(R.string.profile))
             binding.emailTextView.text = it.email
             binding.nameTextView.text = it.name
             binding.nicknameTextView.text = it.nickname

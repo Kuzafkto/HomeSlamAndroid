@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/matchDetailFragment"
-        android:name="com.example.tfgproject.ui.matchDetail.MatchDetailFragment"
+        android:name="com.example.tfgproject.ui.gameDetail.MatchDetailFragment"
         android:label="Detalle del Partido"
         tools:layout="@layout/fragment_match_detail">
         <argument

@@ -1,4 +1,4 @@
-package com.example.tfgproject.ui.matchDetail
+package com.example.tfgproject.ui.gameDetail
 
 import com.example.tfgproject.model.Game
 import com.example.tfgproject.model.Team

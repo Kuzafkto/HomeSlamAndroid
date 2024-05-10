@@ -38,32 +38,55 @@ class TeamsViewModel : ViewModel() {
     private fun calculateWinsAndLosses(team: Team) {
         db.collection("games")
             .whereEqualTo("local", team.id)
-            .addSnapshotListener { localSnapshot, e ->
-                if (e != null) {
-                    Log.w("TeamsViewModel", "Listen failed for local games.", e)
+            .addSnapshotListener { localSnapshot, localError ->
+                if (localError != null) {
+                    Log.w("TeamsViewModel", "Listen failed for local games.", localError)
                     return@addSnapshotListener
                 }
-                val localGames = localSnapshot?.documents?.mapNotNull { it.toObject(Game::class.java) }
-                val localWins = localGames?.count { it.localRuns!! > it.visitorRuns!! } ?: 0
+                val localWins = localSnapshot?.documents?.count {
+                    val game = it.toObject(Game::class.java)
+                    game != null && isValidGame(game) && game.localRuns!!.toInt() > game.visitorRuns!!.toInt()
+                } ?: 0
+
+                val localLosses = localSnapshot?.documents?.count {
+                    val game = it.toObject(Game::class.java)
+                    game != null && isValidGame(game) && game.localRuns!!.toInt() < game.visitorRuns!!.toInt()
+                } ?: 0
 
                 db.collection("games")
                     .whereEqualTo("visitor", team.id)
-                    .addSnapshotListener { visitorSnapshot, error ->
-                        if (error != null) {
-                            Log.w("TeamsViewModel", "Listen failed for visitor games.", error)
+                    .addSnapshotListener { visitorSnapshot, visitorError ->
+                        if (visitorError != null) {
+                            Log.w("TeamsViewModel", "Listen failed for visitor games.", visitorError)
                             return@addSnapshotListener
                         }
-                        val visitorGames = visitorSnapshot?.documents?.mapNotNull { it.toObject(Game::class.java) }
-                        val visitorWins = visitorGames?.count { it.visitorRuns!! > it.localRuns!! } ?: 0
+                        val visitorWins = visitorSnapshot?.documents?.count {
+                            val game = it.toObject(Game::class.java)
+                            game != null && isValidGame(game) && game.visitorRuns!!.toInt() > game.localRuns!!.toInt()
+                        } ?: 0
 
-                        val wins = localWins + visitorWins
-                        val losses = (localGames?.size ?: 0) + (visitorGames?.size ?: 0) - wins
+                        val visitorLosses = visitorSnapshot?.documents?.count {
+                            val game = it.toObject(Game::class.java)
+                            game != null && isValidGame(game) && game.visitorRuns!!.toInt() < game.localRuns!!.toInt()
+                        } ?: 0
 
-                        val updatedTeam = team.copy(gamesWon = wins, gamesLost = losses)
+                        val totalWins = localWins + visitorWins
+                        val totalLosses = localLosses + visitorLosses
+
+                        val updatedTeam = team.copy(gamesWon = totalWins, gamesLost = totalLosses)
                         updateTeamInList(updatedTeam)
                     }
             }
     }
+
+
+    private fun isValidGame(game: Game?): Boolean {
+        return game?.localRuns?.toIntOrNull() != null && game.visitorRuns?.toIntOrNull() != null
+    }
+
+
+
+
 
     private fun updateTeamInList(updatedTeam: Team) {
         _teams.value = _teams.value.map {

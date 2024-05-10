@@ -48,14 +48,24 @@
                 android:padding="8dp"/>
 
 
-            <!-- Story section -->
             <TextView
                 android:id="@+id/tvStoryTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:text="@string/default_story_title"
-                android:textSize="18sp" />
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/lekton_bold"
+                />
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="2dp"
+                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:id="@+id/tvStory"
@@ -63,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/default_story_text"
                 android:textSize="16sp"
-                />
+                android:layout_marginTop="8dp"/>
 
             <Button
                 android:id="@+id/btnReadMore"

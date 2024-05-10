@@ -7,7 +7,7 @@
     <string name="title_partidos">Матчи</string>
     <string name="hamburger_menu_description">Выпадающее меню</string>
     <string name="profile_description">Мой профиль</string>
-    <string name="my_title">Мой профиль</string>
+    <string name="profile">Профиль</string>
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>

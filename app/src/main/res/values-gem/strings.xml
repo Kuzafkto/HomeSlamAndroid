@@ -7,7 +7,7 @@
     <string name="title_partidos">Spiele</string>
     <string name="hamburger_menu_description">Menü anzeigen</string>
     <string name="profile_description">Mein Profil</string>
-    <string name="my_title">Mein Profil</string>
+    <string name="profile">Profil</string>
     <string name="email">E-Mail</string>
     <string name="password">Passwort</string>
     <string name="login">Anmelden</string>
