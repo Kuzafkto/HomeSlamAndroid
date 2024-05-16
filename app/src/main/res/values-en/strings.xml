@@ -7,7 +7,7 @@
     <string name="title_partidos">Matches</string>
     <string name="hamburger_menu_description">Hamburger Menu</string>
     <string name="profile_description">My Profile</string>
-    <string name="profile">ملف تعريف</string>
+    <string name="profile">Profile</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -28,4 +28,7 @@
     <string name="auth_failed">Authentication failed</string>
     <string name="registration_failed">Registration failed</string>
     <string name="logout">Log out</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="cambiar_camara">Switch Camera</string>
+
 </resources>

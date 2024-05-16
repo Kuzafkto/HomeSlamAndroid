@@ -28,4 +28,7 @@
     <string name="auth_failed">Autenticazione fallita</string>
     <string name="registration_failed">Registrazione fallita</string>
     <string name="logout">Disconnettersi</string>
+    <string name="take_photo">Scattare foto</string>
+    <string name="cambiar_camara">Cambiare fotocamera</string>
+
 </resources>

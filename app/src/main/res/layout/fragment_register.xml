@@ -31,6 +31,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/buttonTakePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/take_photo"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/green_background"
+        app:layout_constraintTop_toBottomOf="@id/buttonSelectImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmail"
         style="@style/BlackTextInputLayout"
@@ -39,7 +51,7 @@
         android:layout_height="wrap_content"
         app:boxStrokeColor="@color/black"
         app:endIconMode="clear_text"
-        app:layout_constraintTop_toBottomOf="@id/buttonSelectImage"
+        app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp">

@@ -28,4 +28,7 @@
     <string name="auth_failed">Ошибка аутентификации</string>
     <string name="registration_failed">Ошибка регистрации</string>
     <string name="logout">Выйти</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="cambiar_camara"> Переключить камеру</string>
+
 </resources>

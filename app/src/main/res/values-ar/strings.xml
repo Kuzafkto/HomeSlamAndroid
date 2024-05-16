@@ -28,4 +28,7 @@
     <string name="auth_failed">فشل التوثيق</string>
     <string name="registration_failed">فشل التسجيل</string>
     <string name="logout">تسجيل الخروج</string>
+    <string name="take_photo">التقط صورة</string>
+    <string name="cambiar_camara">تبديل الكاميرا</string>
+
 </resources>

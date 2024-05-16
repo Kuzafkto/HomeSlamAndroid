@@ -1,25 +1,22 @@
 package com.example.tfgproject.ui.register
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
-import com.example.tfgproject.LoginActivity
-import com.example.tfgproject.R
-import com.example.tfgproject.databinding.FragmentRegisterBinding
-import com.example.tfgproject.ui.login.LoginViewModel
-
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import com.example.tfgproject.LoginActivity
+import com.example.tfgproject.R
+import com.example.tfgproject.databinding.FragmentRegisterBinding
+import com.example.tfgproject.CameraActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var takePhotoLauncher: ActivityResultLauncher<Intent>
     private var selectedImageUri: Uri? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -45,9 +43,22 @@ class RegisterFragment : Fragment() {
             }
         }
 
+        takePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val photoUriString = result.data?.getStringExtra("photo_uri")
+                selectedImageUri = photoUriString?.toUri()
+                binding.imageViewProfile.setImageURI(selectedImageUri)
+            }
+        }
+
         binding.buttonSelectImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             selectImageLauncher.launch(intent)
+        }
+
+        binding.buttonTakePhoto.setOnClickListener {
+            val intent = Intent(requireContext(), CameraActivity::class.java)
+            takePhotoLauncher.launch(intent)
         }
 
         binding.registerButton.setOnClickListener {
@@ -65,7 +76,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun createUserWithEmailAndPassword(email: String, password: String, name: String, nickname: String) {
-        if (email.isEmpty() || password.isEmpty() || name.isEmpty()||nickname.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty() || name.isEmpty() || nickname.isEmpty()) {
             Snackbar.make(binding.root, getString(R.string.non_empty_field_error), Snackbar.LENGTH_LONG).show()
             return
         }
@@ -85,7 +96,7 @@ class RegisterFragment : Fragment() {
                     )
 
                     FirebaseFirestore.getInstance().collection("users").document(it.uid).set(userData)
-                        .addOnSuccessListener {doc->
+                        .addOnSuccessListener { doc ->
                             if (selectedImageUri != null) {
                                 uploadImageToFirebaseStorage(selectedImageUri!!, it.uid)
                             } else {
@@ -99,7 +110,6 @@ class RegisterFragment : Fragment() {
                 }
             } else {
                 Log.e("Authentication", "Registration failed", task.exception)
-
                 Snackbar.make(binding.root, getString(R.string.registration_failed), Snackbar.LENGTH_LONG).show()
             }
         }
@@ -122,5 +132,3 @@ class RegisterFragment : Fragment() {
         }
     }
 }
-
-

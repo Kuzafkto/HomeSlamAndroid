@@ -28,4 +28,7 @@
     <string name="auth_failed">身份验证失败</string>
     <string name="registration_failed">注册失败</string>
     <string name="logout">注销</string>
+    <string name="take_photo">拍照</string>
+    <string name="cambiar_camara">切换摄像头</string>
+
 </resources>
