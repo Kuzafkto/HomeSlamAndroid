@@ -28,19 +28,8 @@ class MatchDetailFragment : Fragment() {
                 viewModel.loadGameDetails(it)
             }
             toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
-
         }
     }
-    private fun observeCanVote() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canVote.collectLatest { canVote ->
-                binding.checkBoxLocal.isEnabled = canVote
-                binding.checkBoxVisitor.isEnabled = canVote
-            }
-        }
-    }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMatchDetailBinding.inflate(inflater, container, false)
@@ -50,9 +39,9 @@ class MatchDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeGameDetails()
+        observeCanVote()
         setupCheckboxBehavior()
         setupReadMoreButton()
-        observeCanVote()
     }
 
     private fun setupReadMoreButton() {
@@ -61,6 +50,7 @@ class MatchDetailFragment : Fragment() {
             updateStoryText()
         }
     }
+
     private fun updateStoryText() {
         val fullText = viewModel.gameDetails.value?.game?.story ?: getString(R.string.default_story_text)
         val isExpanded = viewModel.isTextExpanded.value
@@ -71,7 +61,6 @@ class MatchDetailFragment : Fragment() {
         }
         binding.btnReadMore.text = if (isExpanded) getString(R.string.read_less) else getString(R.string.read_more)
     }
-
 
     private fun setupCheckboxBehavior() {
         binding.checkBoxLocal.setOnCheckedChangeListener { _, isChecked ->
@@ -95,28 +84,6 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
-
-
-    /*private fun observeGameDetails() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.gameDetails.collectLatest { details ->
-                details?.let {
-                    toolbarViewModel.setTitle("${it.localTeam?.name} vs ${it.visitorTeam?.name}")
-                    binding.tvLocalTeamName.text = it.localTeam?.name ?: "Indefinido"
-                    binding.tvVisitorTeamName.text = it.visitorTeam?.name ?: "Indefinido"
-                    updateStoryText()
-                    loadImages(it.localTeam?.imageUrl, it.visitorTeam?.imageUrl)
-                    viewModel.loadUserVote(it.game.id ?: "")
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userVoteTeamId.collect { teamId ->
-                updateCheckboxes(teamId)
-            }
-        }
-    }*/
     private fun observeGameDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.gameDetails.collectLatest { details ->
@@ -131,7 +98,24 @@ class MatchDetailFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userVoteTeamId.collectLatest { teamId ->
+                updateCheckboxes(teamId)
+            }
+        }
     }
+
+    private fun observeCanVote() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.canVote.collectLatest { canVote ->
+                binding.checkBoxLocal.isEnabled = canVote
+                binding.checkBoxVisitor.isEnabled = canVote
+                updateCheckboxVisibility(canVote)
+            }
+        }
+    }
+
     private fun updateCheckboxVisibility(canVote: Boolean) {
         if (canVote) {
             binding.checkBoxLocal.visibility = View.VISIBLE
@@ -141,6 +125,7 @@ class MatchDetailFragment : Fragment() {
             binding.checkBoxVisitor.visibility = View.GONE
         }
     }
+
     private fun updateCheckboxes(teamId: String?) {
         val localTeamId = viewModel.gameDetails.value?.localTeam?.id
         val visitorTeamId = viewModel.gameDetails.value?.visitorTeam?.id
@@ -149,13 +134,11 @@ class MatchDetailFragment : Fragment() {
             binding.checkBoxLocal.isChecked = teamId == localTeamId
             binding.checkBoxVisitor.isChecked = teamId == visitorTeamId
         } else {
-            // esto es para q no las marque como true al iniciar el fragmento pq aun no estan seteados
+            // Esto es para que no las marque como true al iniciar el fragmento porque aún no están seteados
             binding.checkBoxLocal.isChecked = false
             binding.checkBoxVisitor.isChecked = false
         }
     }
-
-
 
     private fun loadImages(localImageUrl: String?, visitorImageUrl: String?) {
         localImageUrl?.let {
@@ -171,6 +154,4 @@ class MatchDetailFragment : Fragment() {
             }
         }
     }
-
-
 }
