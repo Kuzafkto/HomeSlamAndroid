@@ -95,8 +95,12 @@ class MatchDetailViewModel : ViewModel() {
                 if (e != null) {
                     return@addSnapshotListener
                 }
-                snapshot?.toObject(Game::class.java)?.let { updatedGame ->
-                    updateGameDetails(updatedGame)
+                snapshot?.let {
+                    val updatedGame = it.toObject(Game::class.java)
+                    updatedGame?.id = it.id // Asigna manualmente el ID del documento
+                    updatedGame?.let { gameWithId ->
+                        updateGameDetails(gameWithId)
+                    }
                 }
             }
 
@@ -124,6 +128,7 @@ class MatchDetailViewModel : ViewModel() {
                 }
             }
     }
+
 
     private fun updateGameDetails(game: Game) {
         val currentDetails = _gameDetails.value
