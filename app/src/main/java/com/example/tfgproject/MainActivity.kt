@@ -1,6 +1,5 @@
 package com.example.tfgproject
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -28,13 +27,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import kotlinx.coroutines.launch
 
+/**
+ * MainActivity is the primary activity that handles navigation and user authentication.
+ */
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var toolbarViewModel: ToolbarViewModel
 
+    /**
+     * Called when the activity is first created. This is where you should do all of your normal static set up.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,11 +51,9 @@ class MainActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().firestoreSettings = firestoreSettings
 
         FirebaseApp.initializeApp(this)
-        binding=ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //setSupportActionBar(binding.toolbar)
-       // val toolbar=binding.toolbar
-       // setSupportActionBar(toolbar)
+
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         loginViewModel.isAuthenticated.observe(this) { isAuthenticated ->
@@ -57,39 +62,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-
         toolbarViewModel = ViewModelProvider(this).get(ToolbarViewModel::class.java)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        /*toolbarViewModel.title.observe(this) { title ->
-            supportActionBar?.title = title
-        }*/
         lifecycleScope.launch {
             toolbarViewModel.title.collect { title ->
                 findViewById<TextView>(R.id.toolbar_title).text = title
             }
         }
 
-        /*val hamburgerButton=binding.buttonHamburger
-        hamburgerButton.setOnClickListener {
-            // Log para el botón hamburguesa
-            Log.d(TAG, "Hamburger menu clicked")
-        }*/
         val profileButton = binding.buttonProfile
         profileButton.setOnClickListener {
-            // utiliza el NavController para navegar al fragmento de perfil
             navController.navigate(R.id.navigation_profile)
         }
 
-
-
-
         val navView: BottomNavigationView = binding.navView
-        val navHostFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration= AppBarConfiguration(
+        appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_noticias,
                 R.id.navigation_partidos,
@@ -105,50 +96,44 @@ class MainActivity : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         loginViewModel.isAuthenticated.observe(this) { isAuthenticated ->
             if (!isAuthenticated) {
-                // ll usuario no está autenticado, navegar al loginFragment
                 navController.navigate(R.id.action_global_navigation_login)
             }
         }
 
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Ss el usuario no está autenticado y el destino no es el LoginFragment,
-            // entonces redirige al LoginFragment.
             if (!loginViewModel.isAuthenticated.value!! && destination.id != R.id.loginFragment) {
                 navController.navigate(R.id.action_global_navigation_login)
             }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment||destination.id==R.id.ProfileFragment) {
-
+            if (destination.id == R.id.loginFragment || destination.id == R.id.ProfileFragment) {
                 binding.navView.visibility = View.GONE
-                //hamburgerButton.visibility=View.GONE
-                profileButton.visibility=View.GONE
+                profileButton.visibility = View.GONE
             } else {
                 binding.navView.visibility = View.VISIBLE
-                //hamburgerButton.visibility=View.VISIBLE esto cuando implementemos el button se descomenta
-                profileButton.visibility=View.VISIBLE
+                profileButton.visibility = View.VISIBLE
             }
-
         }
     }
 
+    /**
+     * Navigates to the LoginActivity to allow the user to log in.
+     */
     private fun navigateToLogin() {
         val loginIntent = Intent(this, LoginActivity::class.java)
-        // limpia la pila de actividades para que el usuario no pueda volver a la MainActivity sin autenticarse.
         loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(loginIntent)
         finish()
     }
 
+    /**
+     * Handles navigation when the user presses the Up button in the app bar.
+     *
+     * @return True if the navigation was successful, false otherwise.
+     */
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-
-
-
-
 }

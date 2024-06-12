@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * ViewModel for managing team details and players in TeamDetailFragment.
+ */
 class TeamDetailViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
@@ -18,12 +21,21 @@ class TeamDetailViewModel : ViewModel() {
 
     private val _players = MutableStateFlow<List<Player>>(emptyList())
     val players: StateFlow<List<Player>> = _players.asStateFlow()
+
     val isTextExpanded = MutableStateFlow(false)  // Manage text expanded state here
 
+    /**
+     * Toggles the expanded state of the team story text.
+     */
     fun toggleTextExpansion() {
         isTextExpanded.value = !isTextExpanded.value
     }
 
+    /**
+     * Loads the details of a team given its [teamId].
+     *
+     * @param teamId The ID of the team to load.
+     */
     fun loadTeamDetails(teamId: String) {
         val teamRef = db.collection("teams").document(teamId)
         teamRef.addSnapshotListener { snapshot, e ->
@@ -38,22 +50,24 @@ class TeamDetailViewModel : ViewModel() {
         }
     }
 
-
+    /**
+     * Loads the players for the team given a list of player IDs.
+     *
+     * @param playerIds The list of player IDs to load.
+     */
     private fun loadPlayers(playerIds: List<String>) {
         db.collection("players")
             .whereIn(FieldPath.documentId(), playerIds)
             .addSnapshotListener { snapshot, e ->
-                Log.d("snapshot",snapshot.toString())
-
-                Log.d("playerIds",playerIds.toString())
+                Log.d("snapshot", snapshot.toString())
+                Log.d("playerIds", playerIds.toString())
                 if (e != null) {
                     Log.e("TeamDetailViewModel", "Listen failed.", e)
                     return@addSnapshotListener
                 }
 
                 val players = snapshot?.toObjects(Player::class.java) ?: emptyList()
-                Log.d("players",players.toString())
-
+                Log.d("players", players.toString())
                 _players.value = players
             }
     }

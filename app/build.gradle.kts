@@ -4,7 +4,9 @@ plugins {
     id("com.google.gms.google-services")
     id("androidx.navigation.safeargs.kotlin")
     id ("kotlin-parcelize")
+    id("org.jetbrains.dokka") version "1.9.20"
 }
+
 
 android {
     namespace = "com.example.tfgproject"
@@ -76,4 +78,14 @@ dependencies {
     implementation ("androidx.camera:camera-view:1.0.0-alpha31")
     implementation ("androidx.camera:camera-extensions:1.0.0-alpha31")
 
+}
+apply(plugin="org.jetbrains.dokka")
+
+tasks.dokkaHtml.configure {
+    dokkaSourceSets{
+        configureEach {
+            documentedVisibilities.set(listOf(org.jetbrains.dokka.DokkaConfiguration.Visibility.PRIVATE)
+                    + documentedVisibilities.get())
+        }
+    }
 }

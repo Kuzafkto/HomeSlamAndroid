@@ -6,56 +6,52 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 
+/**
+ * ViewModel for handling user authentication in the LoginActivity.
+ */
 class LoginViewModel : ViewModel() {
     private lateinit var auth: FirebaseAuth
     private val _isAuthenticated = MutableLiveData<Boolean>()
-    val registrationState: LiveData<Boolean> get() = _registrationState
-    private val _registrationState = MutableLiveData<Boolean>()
     val isAuthenticated: LiveData<Boolean> get() = _isAuthenticated
+    private val _registrationState = MutableLiveData<Boolean>()
+    val registrationState: LiveData<Boolean> get() = _registrationState
 
     init {
-        auth = Firebase.auth
-
+        auth = FirebaseAuth.getInstance()
         checkAuthentication()
     }
 
+    /**
+     * Checks the current authentication state and sets the _isAuthenticated LiveData accordingly.
+     */
     private fun checkAuthentication() {
-        // Establece el valor inicial basado en si el usuario está actualmente autenticado
         val currentUser = auth.currentUser
         _isAuthenticated.value = currentUser != null
 
-        // Agrega un listener de estado de autenticación para escuchar los cambios
         auth.addAuthStateListener { firebaseAuth ->
             _isAuthenticated.value = firebaseAuth.currentUser != null
         }
     }
 
-    /*fun login(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Si el inicio de sesión es exitoso, actualiza el estado de autenticación
-                _isAuthenticated.value = true
-            } else {
-                // Si falla, establece el estado de autenticación en falso
-                _isAuthenticated.value = false
-            }
-        }
-    }*/
-
+    /**
+     * Logs in a user with the given email and password using Firebase Authentication.
+     * This method uses coroutines for async operations.
+     *
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     fun llamarLoginCoroutine(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val result = login(fragment = LoginFragment(),email, password)
+                val result = login(fragment = LoginFragment(), email, password)
                 Log.d("TESTINGCOROUTINE", "Resultado del login: $result")
             } catch (e: Exception) {
                 Log.e("TESTINGCOROUTINE", "Error en login", e)
@@ -63,41 +59,60 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-
-
+    /**
+     * Registers a new user with the given email and password using Firebase Authentication.
+     *
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     fun register(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 _registrationState.value = task.isSuccessful
             }
     }
+
+    /**
+     * Logs in a user with the given email and password using Firebase Authentication.
+     * This method uses coroutines for async operations and handles success or failure.
+     *
+     * @param fragment The LoginFragment instance to handle UI updates.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     fun login(fragment: LoginFragment, email: String, password: String) {
         Log.d(TAG, "signIn:$email")
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = auth.signInWithEmailAndPassword(email, password).await() // Usando kotlinx-coroutines-play-services para await
+                val result = auth.signInWithEmailAndPassword(email, password).await()
                 withContext(Dispatchers.Main) {
                     if (result.user != null) {
                         Log.d(TAG, "signInWithEmail:success")
                         // Manejar éxito de autenticación, por ejemplo actualizar UI o navegar
-                        //fragment.onLoginSuccess()
+                        // fragment.onLoginSuccess()
                     } else {
                         Log.d(TAG, "signInWithEmail:failure")
-                       //fragment.onLoginFailed("Authentication failed.")
+                        // fragment.onLoginFailed("Authentication failed.")
                     }
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "signInWithEmail:failure", e)
                 withContext(Dispatchers.Main) {
                     // Mostrar error usando un método en el fragmento que maneje el contexto adecuadamente
-                    //fragment.onLoginFailed("Authentication failed: ${e.localizedMessage}")
+                    // fragment.onLoginFailed("Authentication failed: ${e.localizedMessage}")
                 }
             }
         }
     }
 
-
-
+    /**
+     * Attempts to log in a user with the given email and password using Firebase Authentication.
+     * This method uses coroutines for async operations.
+     *
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @return True if the login was successful, false otherwise.
+     */
     suspend fun login2(email: String, password: String): Boolean {
         val executor = Executors.newSingleThreadExecutor()
         var result = false
@@ -115,7 +130,7 @@ class LoginViewModel : ViewModel() {
             }
 
         try {
-            completionTask.await()  // Asegúrate de esperar a que se complete la tarea
+            completionTask.await()
         } catch (e: Exception) {
             Log.e("LoginViewModel", "Login interrupted", e)
         }
@@ -123,7 +138,14 @@ class LoginViewModel : ViewModel() {
         return result
     }
 
-
+    /**
+     * Attempts to log in a user with the given email and password using Firebase Authentication.
+     * This method uses coroutines for async operations.
+     *
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @return True if the login was successful, false otherwise.
+     */
     suspend fun loginCopy(email: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -141,9 +163,12 @@ class LoginViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Called when the ViewModel is destroyed.
+     * This method is used to clean up resources.
+     */
     override fun onCleared() {
         super.onCleared()
         // Aquí podrías limpiar los recursos, como listeners si los hubiera
     }
 }
-

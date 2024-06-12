@@ -8,6 +8,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * ViewModel class for managing and providing data related to teams.
+ */
 class TeamsViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val _teams = MutableStateFlow<List<Team>>(emptyList())
@@ -17,6 +20,10 @@ class TeamsViewModel : ViewModel() {
         loadTeams()
     }
 
+    /**
+     * Loads the list of teams from the Firestore database and sets up a listener
+     * for real-time updates.
+     */
     private fun loadTeams() {
         db.collection("teams").addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -35,6 +42,12 @@ class TeamsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Calculates the number of wins and losses for the given team by querying the
+     * games collection in Firestore.
+     *
+     * @param team The team for which to calculate wins and losses.
+     */
     private fun calculateWinsAndLosses(team: Team) {
         db.collection("games")
             .whereEqualTo("local", team.id)
@@ -79,15 +92,21 @@ class TeamsViewModel : ViewModel() {
             }
     }
 
-
+    /**
+     * Validates a game to ensure it has valid run scores.
+     *
+     * @param game The game to validate.
+     * @return True if the game is valid, false otherwise.
+     */
     private fun isValidGame(game: Game?): Boolean {
         return game?.localRuns?.toIntOrNull() != null && game.visitorRuns?.toIntOrNull() != null
     }
 
-
-
-
-
+    /**
+     * Updates a team in the list of teams with new win/loss data.
+     *
+     * @param updatedTeam The team with updated win/loss data.
+     */
     private fun updateTeamInList(updatedTeam: Team) {
         _teams.value = _teams.value.map {
             if (it.id == updatedTeam.id) updatedTeam else it

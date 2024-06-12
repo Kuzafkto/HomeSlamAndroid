@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.tfgproject.R
 import com.example.tfgproject.databinding.FragmentTeamDetailBinding
@@ -18,17 +17,26 @@ import com.example.tfgproject.ui.toolbar.ToolbarViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment for displaying the details of a team.
+ */
 class TeamDetailFragment : Fragment() {
     private lateinit var binding: FragmentTeamDetailBinding
     private val viewModel: TeamDetailViewModel by viewModels()
     private lateinit var toolbarViewModel: ToolbarViewModel
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTeamDetailBinding.inflate(inflater, container, false)
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView().
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val teamId = TeamDetailFragmentArgs.fromBundle(requireArguments()).teamId
@@ -36,16 +44,20 @@ class TeamDetailFragment : Fragment() {
         setupRecyclerView()
         observeTeamAndPlayers()
         setupReadMoreButton()
-
     }
 
+    /**
+     * Sets up the RecyclerView for displaying player information.
+     */
     private fun setupRecyclerView() {
         val gridLayoutManager = GridLayoutManager(context, 2)
         binding.recyclerViewPlayers.layoutManager = gridLayoutManager
         binding.recyclerViewPlayers.adapter = PlayerAdapter(emptyList())
     }
 
-
+    /**
+     * Observes changes in team and player data, updating the UI accordingly.
+     */
     private fun observeTeamAndPlayers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.team.collect { team ->
@@ -73,17 +85,23 @@ class TeamDetailFragment : Fragment() {
         }
     }
 
-
+    /**
+     * Sets up the button for toggling the story text expansion.
+     */
     private fun setupReadMoreButton() {
         binding.btnReadMore.setOnClickListener {
             viewModel.toggleTextExpansion()  // Toggle the expanded state in ViewModel
             updateStoryText()
         }
     }
+
+    /**
+     * Updates the story text view based on the expanded state.
+     */
     private fun updateStoryText() {
         val fullText = viewModel.team.value?.story ?: getString(R.string.default_story_text)
         val isExpanded = viewModel.isTextExpanded.value
-        Log.d("valuetest",viewModel.isTextExpanded.value.toString())
+        Log.d("valuetest", viewModel.isTextExpanded.value.toString())
         binding.tvStory.text = if (isExpanded) {
             fullText
         } else {
@@ -91,7 +109,4 @@ class TeamDetailFragment : Fragment() {
         }
         binding.btnReadMore.text = if (isExpanded) getString(R.string.read_less) else getString(R.string.read_more)
     }
-
-
-
 }

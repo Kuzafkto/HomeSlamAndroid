@@ -9,12 +9,28 @@ import com.example.tfgproject.R
 import com.example.tfgproject.databinding.PlayerItemBinding
 import com.example.tfgproject.model.Player
 
+/**
+ * Adapter for displaying a list of players in a RecyclerView.
+ *
+ * @property players List of players to be displayed.
+ */
 class PlayerAdapter(private var players: List<Player>) : RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 
+    /**
+     * ViewHolder for player items.
+     *
+     * @param binding Binding object for player item layout.
+     */
     class PlayerViewHolder(private val binding: PlayerItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        /**
+         * Returns the image URL for the given player position.
+         *
+         * @param position Player position code.
+         * @return The URL of the image corresponding to the player position.
+         */
         fun getPositionImageUrl(position: Int): String {
             return when (position) {
-                //pitcher
                 1 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/noun-baseball-pitcher-2745168.png?alt=media&token=5817cc45-2618-4384-bd11-00e61b678775"
                 2 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/catcher%20logo.png?alt=media&token=bd536903-378b-46e9-8e91-b2a784a93f06"
                 3 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/noun-mitt-1941039.png?alt=media&token=587d6ce6-3d13-4440-b2a4-da79454a87bd"
@@ -24,11 +40,15 @@ class PlayerAdapter(private var players: List<Player>) : RecyclerView.Adapter<Pl
                 7 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/noun-baseball-player-54549.png?alt=media&token=c39eff19-4e52-4379-857d-ba2f2549812e"
                 8 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/noun-catcher-643797.png?alt=media&token=485f3826-d24a-479a-94e1-97ed7c211bdd"
                 9 -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/rightfield.png?alt=media&token=68854fa0-b8ef-439f-983d-486238a92c6c"
-
                 else -> "https://firebasestorage.googleapis.com/v0/b/home-slam.appspot.com/o/unknown.png?alt=media&token=756b782e-9cdc-40ad-ae01-13ae9677ce28"
             }
         }
 
+        /**
+         * Binds the player data to the view holder.
+         *
+         * @param player The player object to be displayed.
+         */
         fun bind(player: Player) {
             binding.textViewPlayerName.text = player.name
             binding.imageViewPlayer.load(player.imageUrl) {
@@ -46,7 +66,6 @@ class PlayerAdapter(private var players: List<Player>) : RecyclerView.Adapter<Pl
                             placeholder(R.drawable.placeholder_image)
                             error(R.drawable.error_image)
                         }
-
                     }
                 }
             }
@@ -75,7 +94,6 @@ class PlayerAdapter(private var players: List<Player>) : RecyclerView.Adapter<Pl
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerViewHolder {
         val binding = PlayerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlayerViewHolder(binding)
@@ -87,10 +105,13 @@ class PlayerAdapter(private var players: List<Player>) : RecyclerView.Adapter<Pl
 
     override fun getItemCount() = players.size
 
+    /**
+     * Updates the player list and notifies the adapter of data set changes.
+     *
+     * @param newPlayers The new list of players.
+     */
     fun updatePlayers(newPlayers: List<Player>) {
         players = newPlayers
         notifyDataSetChanged()
     }
-
-
 }

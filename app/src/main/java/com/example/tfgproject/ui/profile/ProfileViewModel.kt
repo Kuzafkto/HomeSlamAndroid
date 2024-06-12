@@ -1,4 +1,5 @@
 package com.example.tfgproject.ui.profile
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tfgproject.model.User
@@ -9,14 +10,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+/**
+ * ViewModel for managing user profile data.
+ */
 class ProfileViewModel : ViewModel() {
-    private val _userData = MutableStateFlow<User?>(null) // Suponiendo que User es tu clase de modelo
+    private val _userData = MutableStateFlow<User?>(null) // Assuming User is your model class
     val userData = _userData.asStateFlow()
 
     init {
         loadUserData()
     }
 
+    /**
+     * Loads the user data from Firestore and updates the userData state flow.
+     */
     private fun loadUserData() {
         viewModelScope.launch {
             val userId = FirebaseAuth.getInstance().currentUser?.uid

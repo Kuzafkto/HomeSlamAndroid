@@ -16,25 +16,59 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * ViewModel for managing game details and user voting in a match.
+ *
+ * @constructor Creates an instance of [MatchDetailViewModel].
+ */
 class MatchDetailViewModel : ViewModel() {
+
     private val db = FirebaseFirestore.getInstance()
     private val _gameDetails = MutableStateFlow<GameDetails?>(null)
+
+    /**
+     * StateFlow to expose the game details.
+     */
     val gameDetails: StateFlow<GameDetails?> = _gameDetails
+
     private val auth = FirebaseAuth.getInstance()
     private val _userVoteTeamId = MutableStateFlow<String?>(null)
+
+    /**
+     * StateFlow to expose the user's voted team ID.
+     */
     val userVoteTeamId: StateFlow<String?> = _userVoteTeamId
+
+    /**
+     * StateFlow to track whether the text is expanded or not.
+     */
     val isTextExpanded = MutableStateFlow(false)
 
+    /**
+     * Toggles the expansion state of the text.
+     */
     fun toggleTextExpansion() {
         isTextExpanded.value = !isTextExpanded.value
     }
 
+    /**
+     * StateFlow to determine if the user can vote.
+     *
+     * @return true if the user can vote, false otherwise.
+     */
     val canVote: StateFlow<Boolean> = _gameDetails.map { details ->
         val localRuns = details?.game?.localRuns
         val visitorRuns = details?.game?.visitorRuns
         localRuns == null || visitorRuns == null || localRuns == "?" || visitorRuns == "?"
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true) //estp simplemente pasa de flow a stateflow
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
 
+    /**
+     * Creates a new vote for the actual user or updates an already existing one for a game with [gameId] voting for a team with [teamId]
+     *
+     * @param gameId game's uuid
+     * @param teamId team's uuid that user is voting
+     *
+     */
     fun voteForTeam(gameId: String, teamId: String) {
         val userId = auth.currentUser?.uid ?: return
 
@@ -61,7 +95,14 @@ class MatchDetailViewModel : ViewModel() {
             }
     }
 
-
+    /**
+     * Creates a new vote document in the database.
+     *
+     * @param gameId The ID of the game being voted on.
+     * @param teamId The ID of the team being voted for.
+     * @param userVotes The list of vote IDs associated with the user.
+     * @param userRef A reference to the user's document in Firestore.
+     */
     private fun createVote(gameId: String, teamId: String, userVotes: List<String>, userRef: DocumentReference) {
         val newVoteData = mapOf(
             "game" to gameId,
@@ -79,7 +120,12 @@ class MatchDetailViewModel : ViewModel() {
             }
     }
 
-
+    /**
+     * Updates an existing vote document in the database.
+     *
+     * @param voteId The ID of the vote document to be updated.
+     * @param teamId The ID of the team being voted for.
+     */
     private fun updateVote(voteId: String, teamId: String) {
         db.collection("votes").document(voteId)
             .update("reference", teamId)  // Actualizar referencia del equipo
@@ -88,19 +134,19 @@ class MatchDetailViewModel : ViewModel() {
             }
     }
 
-
+    /**
+     * Loads the details of a game from the database.
+     *
+     * @param game The game object containing the game ID.
+     */
     fun loadGameDetails(game: Game) {
         db.collection("games").document(game.id ?: return)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     return@addSnapshotListener
                 }
-                snapshot?.let {
-                    val updatedGame = it.toObject(Game::class.java)
-                    updatedGame?.id = it.id // Asigna manualmente el ID del documento
-                    updatedGame?.let { gameWithId ->
-                        updateGameDetails(gameWithId)
-                    }
+                snapshot?.toObject(Game::class.java)?.let { updatedGame ->
+                    updateGameDetails(updatedGame)
                 }
             }
 
@@ -129,11 +175,21 @@ class MatchDetailViewModel : ViewModel() {
             }
     }
 
-
+    /**
+     * Updates the game details with new data.
+     *
+     * @param game The updated game object.
+     */
     private fun updateGameDetails(game: Game) {
         val currentDetails = _gameDetails.value
         _gameDetails.value = GameDetails(game, currentDetails?.localTeam, currentDetails?.visitorTeam)
     }
+
+    /**
+     * Loads the user's vote for a specific game from the database.
+     *
+     * @param gameId The ID of the game for which to load the user's vote.
+     */
     fun loadUserVote(gameId: String) {
         val userId = auth.currentUser?.uid ?: return  // Asegurar que el usuario está autenticado
 
@@ -163,7 +219,4 @@ class MatchDetailViewModel : ViewModel() {
                 _userVoteTeamId.value = null
             }
     }
-
-
-
 }

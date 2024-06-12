@@ -1,4 +1,5 @@
 package com.example.tfgproject.ui.gameDetail
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,11 +16,19 @@ import com.example.tfgproject.ui.toolbar.ToolbarViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * A Fragment for displaying the details of a specific match.
+ */
 class MatchDetailFragment : Fragment() {
+
     private val viewModel: MatchDetailViewModel by viewModels()
     private lateinit var binding: FragmentMatchDetailBinding
     private lateinit var toolbarViewModel: ToolbarViewModel
 
+    /**
+     * Called when the fragment is being created.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -31,11 +40,23 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to. The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMatchDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView has returned, but before any saved state has been restored in to the view.
+     * @param view The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeGameDetails()
@@ -44,6 +65,9 @@ class MatchDetailFragment : Fragment() {
         setupReadMoreButton()
     }
 
+    /**
+     * Sets up the "Read More" button behavior to expand or collapse the story text.
+     */
     private fun setupReadMoreButton() {
         binding.btnReadMore.setOnClickListener {
             viewModel.toggleTextExpansion()
@@ -51,6 +75,9 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Updates the story text view based on whether it is expanded or collapsed.
+     */
     private fun updateStoryText() {
         val fullText = viewModel.gameDetails.value?.game?.story ?: getString(R.string.default_story_text)
         val isExpanded = viewModel.isTextExpanded.value
@@ -62,6 +89,9 @@ class MatchDetailFragment : Fragment() {
         binding.btnReadMore.text = if (isExpanded) getString(R.string.read_less) else getString(R.string.read_more)
     }
 
+    /**
+     * Sets up the behavior of the checkboxes for voting on teams.
+     */
     private fun setupCheckboxBehavior() {
         binding.checkBoxLocal.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -84,6 +114,9 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Observes changes in the game details and updates the UI accordingly.
+     */
     private fun observeGameDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.gameDetails.collectLatest { details ->
@@ -106,6 +139,9 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Observes changes in the voting eligibility and updates the UI accordingly.
+     */
     private fun observeCanVote() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.canVote.collectLatest { canVote ->
@@ -116,6 +152,11 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Updates the visibility of the checkboxes based on the voting eligibility.
+     *
+     * @param canVote Whether the user can vote or not.
+     */
     private fun updateCheckboxVisibility(canVote: Boolean) {
         if (canVote) {
             binding.checkBoxLocal.visibility = View.VISIBLE
@@ -126,6 +167,11 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Updates the state of the checkboxes based on the user's vote.
+     *
+     * @param teamId The ID of the team that the user has voted for.
+     */
     private fun updateCheckboxes(teamId: String?) {
         val localTeamId = viewModel.gameDetails.value?.localTeam?.id
         val visitorTeamId = viewModel.gameDetails.value?.visitorTeam?.id
@@ -140,6 +186,12 @@ class MatchDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Loads the images of the local and visitor teams.
+     *
+     * @param localImageUrl The URL of the local team's image.
+     * @param visitorImageUrl The URL of the visitor team's image.
+     */
     private fun loadImages(localImageUrl: String?, visitorImageUrl: String?) {
         localImageUrl?.let {
             binding.imgTeamLocal.load(it) {

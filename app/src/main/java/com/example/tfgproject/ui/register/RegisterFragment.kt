@@ -22,6 +22,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Fragment for user registration. This fragment allows users to register with email and password,
+ * select or take a profile picture, and save their data to Firebase.
+ */
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
@@ -36,6 +40,7 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize the launcher for selecting an image from the gallery
         selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 selectedImageUri = result.data?.data
@@ -43,6 +48,7 @@ class RegisterFragment : Fragment() {
             }
         }
 
+        // Initialize the launcher for taking a photo
         takePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val photoUriString = result.data?.getStringExtra("photo_uri")
@@ -75,6 +81,14 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    /**
+     * Creates a user with the provided email and password, and stores additional user data in Firestore.
+     *
+     * @param email The user's email address.
+     * @param password The user's password.
+     * @param name The user's full name.
+     * @param nickname The user's nickname.
+     */
     private fun createUserWithEmailAndPassword(email: String, password: String, name: String, nickname: String) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty() || nickname.isEmpty()) {
             Snackbar.make(binding.root, getString(R.string.non_empty_field_error), Snackbar.LENGTH_LONG).show()
@@ -92,7 +106,9 @@ class RegisterFragment : Fragment() {
                         "email" to email,
                         "picture" to "",
                         "userId" to it.uid,
-                        "votes" to listOf<String>()
+                        "votes" to listOf<String>(),
+                        "isAdmin" to false,
+                        "isOwner" to false
                     )
 
                     FirebaseFirestore.getInstance().collection("users").document(it.uid).set(userData)
@@ -115,6 +131,12 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    /**
+     * Uploads the selected image to Firebase Storage and updates the user's profile picture URL in Firestore.
+     *
+     * @param imageUri The URI of the selected image.
+     * @param userId The user's ID.
+     */
     private fun uploadImageToFirebaseStorage(imageUri: Uri, userId: String) {
         val storageRef = FirebaseStorage.getInstance().reference.child("users/$userId/profile.jpg")
         storageRef.putFile(imageUri).addOnSuccessListener {

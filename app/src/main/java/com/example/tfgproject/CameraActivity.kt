@@ -1,4 +1,5 @@
 package com.example.tfgproject
+
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
@@ -25,6 +26,10 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+/**
+ * CameraActivity is responsible for handling the camera functionality, including capturing photos,
+ * switching between front and back cameras, and selecting images from the gallery.
+ */
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
     private var imageCapture: ImageCapture? = null
@@ -32,6 +37,9 @@ class CameraActivity : AppCompatActivity() {
     private var isFrontCamera = true
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
 
+    /**
+     * Initializes the activity and sets up the UI components and camera functionality.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -72,6 +80,9 @@ class CameraActivity : AppCompatActivity() {
             }
         }
 
+    /**
+     * Starts the camera preview and binds the use cases to the lifecycle.
+     */
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
@@ -98,11 +109,17 @@ class CameraActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    /**
+     * Switches between the front and back camera.
+     */
     private fun switchCamera() {
         isFrontCamera = !isFrontCamera
         startCamera()
     }
 
+    /**
+     * Captures a photo and saves it to the specified location.
+     */
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
@@ -131,11 +148,17 @@ class CameraActivity : AppCompatActivity() {
             })
     }
 
+    /**
+     * Opens the gallery to select an image.
+     */
     private fun selectImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         selectImageLauncher.launch(intent)
     }
 
+    /**
+     * Provides the output directory for saving photos.
+     */
     private val outputDirectory: File
         get() {
             val mediaDir = externalMediaDirs.firstOrNull()?.let {
@@ -144,10 +167,16 @@ class CameraActivity : AppCompatActivity() {
             return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
         }
 
+    /**
+     * Checks if all necessary permissions are granted.
+     */
     private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(
         this, Manifest.permission.CAMERA
     ) == PackageManager.PERMISSION_GRANTED
 
+    /**
+     * Shuts down the camera executor service when the activity is destroyed.
+     */
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()

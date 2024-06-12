@@ -1,4 +1,5 @@
 package com.example.tfgproject.ui.profile
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,15 +19,31 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment to display and manage user profile.
+ */
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
     private lateinit var toolbarViewModel: ToolbarViewModel
+
+    /**
+     * Called to do initial creation of the fragment.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbarViewModel = ViewModelProvider(requireActivity()).get(ToolbarViewModel::class.java)
     }
+
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -34,6 +51,11 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView() has returned, but before any saved state has been restored in to the view.
+     * @param view The View returned by onCreateView().
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,6 +63,9 @@ class ProfileFragment : Fragment() {
         setupLogoutButton()
     }
 
+    /**
+     * Sets up the logout button to sign out the user and navigate to the login screen.
+     */
     private fun setupLogoutButton() {
         binding.logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -48,12 +73,18 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Navigates to the login screen.
+     */
     private fun navigateToLogin() {
         val intent = Intent(activity, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 
+    /**
+     * Observes user data and updates the UI accordingly.
+     */
     private fun observeUserData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userData.collect { user ->
@@ -62,11 +93,15 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Updates the UI with the user data.
+     * @param user The user data to be displayed.
+     */
     private fun updateUI(user: User?) {
         user?.let {
-            if(it.nickname!=null){
-                binding.profileTitle.text=it.nickname
-            }else{
+            if (it.nickname != null) {
+                binding.profileTitle.text = it.nickname
+            } else {
                 toolbarViewModel.setTitle("????")
             }
             toolbarViewModel.setTitle(getString(R.string.profile))
@@ -81,6 +116,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    /**
+     * Called when the view previously created by onCreateView() has been detached from the fragment.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
