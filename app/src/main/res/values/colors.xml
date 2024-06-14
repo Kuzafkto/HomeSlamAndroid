@@ -7,8 +7,11 @@
     <color name="nav_item_selected">#FF000000</color>
     <color name="nav_item_unselected">#FF000000</color>
     <color name="toolbar_background_color">#1D1D00</color>
-    <color name="green_background">#005625</color>
+    <color name="green_background">#448E5B</color>
     <color name="brown_secondary">#7e4d32</color>
     <color name="gold">#FFD700</color>
     <color name="red">#E60000</color>
+    <color name="green_secondary">#1E1F1A</color>
+    <color name="green_primary">#32352C</color>
+
 </resources>
